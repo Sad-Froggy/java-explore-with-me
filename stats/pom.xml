@@ -10,11 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <packaging>pom</packaging>
-    <modules>
-        <module>stats-dto</module>
-        <module>stats-client</module>
-        <module>stats-server</module>
-    </modules>
 
     <artifactId>stats</artifactId>
 
