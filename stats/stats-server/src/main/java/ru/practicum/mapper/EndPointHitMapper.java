@@ -1,13 +1,27 @@
 package ru.practicum.mapper;
 
-import org.mapstruct.Mapper;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.model.EndPointHit;
 
 
-@Mapper(componentModel = "spring")
-public interface EndPointHitMapper {
-    EndPointHit toEndPointHit(EndPointHitDto source);
+public class EndPointHitMapper {
+    public static EndPointHit toEndPointHit(EndPointHitDto dto) {
+        return EndPointHit.builder()
+                .id(dto.getId())
+                .uri(dto.getUri())
+                .ip(dto.getIp())
+                .app(dto.getApp())
+                .timestamp(dto.getTimestamp())
+                .build();
+    }
 
-    EndPointHitDto toEndPointHitDto(EndPointHit destination);
+    public static EndPointHitDto toEndPointHitDto(EndPointHit model){
+        return EndPointHitDto.builder()
+                .id(model.getId())
+                .uri(model.getUri())
+                .ip(model.getIp())
+                .app(model.getApp())
+                .timestamp(model.getTimestamp())
+                .build();
+    }
 }

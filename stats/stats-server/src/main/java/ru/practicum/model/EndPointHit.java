@@ -16,7 +16,7 @@ public class EndPointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "app")
     private String app;
     @Column(name = "uri")

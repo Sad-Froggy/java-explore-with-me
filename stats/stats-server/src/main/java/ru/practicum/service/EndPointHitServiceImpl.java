@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.*;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.exception.NotValidException;
+
 import ru.practicum.mapper.EndPointHitMapper;
 import ru.practicum.mapper.ViewStatsMapper;
 import ru.practicum.model.EndPointHit;
-import ru.practicum.model.ViewStats;
 import ru.practicum.repository.StatsRepository;
 
 
@@ -23,27 +23,27 @@ import java.util.stream.Collectors;
 public class EndPointHitServiceImpl implements EndPointHitService {
 
     private final StatsRepository repository;
-    private final EndPointHitMapper endPointHitMapper;
-    private final ViewStatsMapper viewStatsMapper;
+
 
     @Transactional
     @Override
-    public void post(EndPointHitDto endPointHitDto) {
-        EndPointHit endPointHit = endPointHitMapper.toEndPointHit(endPointHitDto);
-        repository.save(endPointHit);
+    public EndPointHitDto post(EndPointHitDto endPointHitDto) {
+        EndPointHit endPointHit = EndPointHitMapper.toEndPointHit(endPointHitDto);
+        endPointHit.setTimestamp(LocalDateTime.now());
+        return EndPointHitMapper.toEndPointHitDto(repository.save(endPointHit));
     }
 
     @Override
-    public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
+    public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         if (start.isAfter(end)) {
             throw new NotValidException("нижняя граница времени позже верхней");
         }
-        List<ViewStats> viewStats;
         if (unique) {
-            viewStats = repository.findAllUniqueIpByParameters(start, end, uris, ViewStats.class);
+            return repository.findDistinctAllStatsWithFilter(uris, start, end)
+                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
         } else {
-            viewStats = repository.findAllByParameters(start, end, uris, ViewStats.class);
+            return repository.findAllStatsWithFilter(uris, start, end)
+                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
         }
-        return viewStats.stream().map(viewStatsMapper::toViewStatsDto).collect(Collectors.toList());
     }
 }

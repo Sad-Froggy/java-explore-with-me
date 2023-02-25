@@ -14,12 +14,12 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EndPointHitDto {
+    Long id;
     @NotBlank
     private String app;
     @NotBlank
     private String uri;
     @NotBlank
-    @Pattern(regexp = "^(([0-9]{1,3}[.]){3})([0-9]{1,3})$")
     private String ip;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
