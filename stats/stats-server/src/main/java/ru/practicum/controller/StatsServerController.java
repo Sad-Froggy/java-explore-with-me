@@ -24,7 +24,7 @@ public class StatsServerController {
     @PostMapping("/hit")
     public void post(@RequestBody @Valid EndPointHitDto endPointHitDto) {
         log.info("Запрос создания события в сервере статистики");
-        endPointHitService.post(endPointHitDto);
+        ResponseEntity.ok(endPointHitService.post(endPointHitDto));
     }
 
     @GetMapping("/stats")
