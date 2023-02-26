@@ -15,7 +15,7 @@ public class EndPointHitMapper {
                 .build();
     }
 
-    public static EndPointHitDto toEndPointHitDto(EndPointHit model){
+    public static EndPointHitDto toEndPointHitDto(EndPointHit model) {
         return EndPointHitDto.builder()
                 .id(model.getId())
                 .uri(model.getUri())
