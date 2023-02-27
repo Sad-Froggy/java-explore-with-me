@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EndPointHitDto {
-    Long id;
+    private Long id;
     @NotBlank
     private String app;
     @NotBlank
