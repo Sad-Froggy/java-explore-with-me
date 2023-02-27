@@ -10,6 +10,7 @@ import ru.practicum.exception.NotValidException;
 import ru.practicum.mapper.EndPointHitMapper;
 import ru.practicum.mapper.ViewStatsMapper;
 import ru.practicum.model.EndPointHit;
+import ru.practicum.model.ViewStats;
 import ru.practicum.repository.StatsRepository;
 
 
@@ -38,12 +39,16 @@ public class EndPointHitServiceImpl implements EndPointHitService {
         if (start.isAfter(end)) {
             throw new NotValidException("нижняя граница времени позже верхней");
         }
-        if (unique) {
-            return repository.findDistinctAllStatsWithFilter(uris, start, end)
-                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
-        } else {
-            return repository.findAllStatsWithFilter(uris, start, end)
-                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
-        }
+        List<ViewStats> result = unique ? repository.findDistinctAllStatsWithFilter(uris, start, end)
+                : repository.findAllStatsWithFilter(uris, start, end);
+        return result.stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
+
+//        if (unique) {
+//            return repository.findDistinctAllStatsWithFilter(uris, start, end)
+//                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
+//        } else {
+//            return repository.findAllStatsWithFilter(uris, start, end)
+//                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
+//        }
     }
 }
