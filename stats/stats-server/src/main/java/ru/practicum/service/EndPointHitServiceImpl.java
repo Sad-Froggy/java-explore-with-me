@@ -42,13 +42,5 @@ public class EndPointHitServiceImpl implements EndPointHitService {
         List<ViewStats> result = unique ? repository.findDistinctAllStatsWithFilter(uris, start, end)
                 : repository.findAllStatsWithFilter(uris, start, end);
         return result.stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
-
-//        if (unique) {
-//            return repository.findDistinctAllStatsWithFilter(uris, start, end)
-//                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
-//        } else {
-//            return repository.findAllStatsWithFilter(uris, start, end)
-//                    .stream().map(ViewStatsMapper::toViewStatsDto).collect(Collectors.toList());
-//        }
     }
 }
