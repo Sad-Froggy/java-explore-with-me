@@ -29,8 +29,9 @@ public class StatsClient {
 
     protected ResponseEntity<List<ViewStatsDto>> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         StringBuilder uriBuilder = new StringBuilder();
+        uriBuilder.append("uris=");
         for (String uri : uris) {
-            uriBuilder.append("uris=").append(uri).append("&");
+            uriBuilder.append(uri).append("&");
         }
         String query = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(formatter), end.format(formatter), uriBuilder, unique);
         return rest.exchange(query, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
