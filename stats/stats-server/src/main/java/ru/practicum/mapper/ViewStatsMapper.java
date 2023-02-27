@@ -1,10 +1,11 @@
 package ru.practicum.mapper;
 
+import lombok.NonNull;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.model.ViewStats;
 
 public class ViewStatsMapper {
-    public static ViewStats toViewStats(ViewStatsDto dto) {
+    public static ViewStats toViewStats(@NonNull ViewStatsDto dto) {
         return ViewStats.builder()
                 .app(dto.getApp())
                 .uri(dto.getUri())
@@ -12,7 +13,7 @@ public class ViewStatsMapper {
                 .build();
     }
 
-    public static ViewStatsDto toViewStatsDto(ViewStats model) {
+    public static ViewStatsDto toViewStatsDto(@NonNull ViewStats model) {
         return ViewStatsDto.builder()
                 .app(model.getApp())
                 .uri(model.getUri())

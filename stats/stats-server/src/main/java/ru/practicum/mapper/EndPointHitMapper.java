@@ -1,11 +1,12 @@
 package ru.practicum.mapper;
 
+import lombok.NonNull;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.model.EndPointHit;
 
 
 public class EndPointHitMapper {
-    public static EndPointHit toEndPointHit(EndPointHitDto dto) {
+    public static EndPointHit toEndPointHit(@NonNull EndPointHitDto dto) {
         return EndPointHit.builder()
                 .id(dto.getId())
                 .uri(dto.getUri())
@@ -15,7 +16,7 @@ public class EndPointHitMapper {
                 .build();
     }
 
-    public static EndPointHitDto toEndPointHitDto(EndPointHit model) {
+    public static EndPointHitDto toEndPointHitDto(@NonNull EndPointHit model) {
         return EndPointHitDto.builder()
                 .id(model.getId())
                 .uri(model.getUri())
