@@ -18,13 +18,13 @@ public class RequestMapper {
                 .build();
     }
 
-    public static EventRequestStatusUpdateResult toRejectedRequest(List<ParticipationRequestDto> source){
+    public static EventRequestStatusUpdateResult toRejectedRequest(List<ParticipationRequestDto> source) {
         return EventRequestStatusUpdateResult.builder()
                 .rejectedRequests(source)
                 .build();
     }
 
-    public static EventRequestStatusUpdateResult toConfirmedRequest(List<ParticipationRequestDto> source){
+    public static EventRequestStatusUpdateResult toConfirmedRequest(List<ParticipationRequestDto> source) {
         return EventRequestStatusUpdateResult.builder()
                 .confirmedRequests(source)
                 .build();

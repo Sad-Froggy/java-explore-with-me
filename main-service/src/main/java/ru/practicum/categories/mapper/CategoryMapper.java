@@ -6,13 +6,13 @@ import ru.practicum.categories.model.Category;
 
 public class CategoryMapper {
 
-    public static Category toCategory(NewCategoryDto source){
+    public static Category toCategory(NewCategoryDto source) {
         return Category.builder()
                 .name(source.getName())
                 .build();
     }
 
-    public static CategoryDto toCategoryDto(Category source){
+    public static CategoryDto toCategoryDto(Category source) {
         return CategoryDto.builder()
                 .name(source.getName())
                 .build();

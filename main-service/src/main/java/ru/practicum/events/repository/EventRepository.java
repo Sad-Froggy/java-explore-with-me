@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long>, EventRepositorySearch {
 
-    Optional<Event> findByCategoryId(int category_id);
+    Optional<Event> findByCategoryId(int categoryId);
 
     List<Event> findAllByIdIsGreaterThanEqualAndInitiatorIdIs(long from, Long userId, PageRequest pageRequest);
 }
