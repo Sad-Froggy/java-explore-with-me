@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.StatsClient;
-import ru.practicum.ViewStatsDto;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;

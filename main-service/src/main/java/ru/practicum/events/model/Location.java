@@ -11,8 +11,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "locations", schema = "public")
+@IdClass(LocationId.class)
 public class Location {
-    @EqualsAndHashCode.Exclude
     @Id
     private float lat;
     @Id

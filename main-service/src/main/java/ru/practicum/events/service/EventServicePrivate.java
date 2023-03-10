@@ -8,7 +8,6 @@ import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.NewEventDto;
-import ru.practicum.events.dto.UpdateEventAdminRequest;
 import ru.practicum.events.dto.UpdateEventUserRequest;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
@@ -20,7 +19,6 @@ import ru.practicum.requests.model.ParticipationRequest;
 import ru.practicum.requests.service.RequestService;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
-
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,8 +1,6 @@
 package ru.practicum.requests.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.events.model.Event;
 import ru.practicum.users.model.User;
 
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "requests", schema = "public")
+@Table(name = "participation_requests", schema = "public")
 public class ParticipationRequest {
     @EqualsAndHashCode.Exclude
     @Id

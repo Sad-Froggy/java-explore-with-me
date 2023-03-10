@@ -4,8 +4,6 @@ import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.dto.NewCategoryDto;
 import ru.practicum.categories.model.Category;
 
-import java.util.Collection;
-
 public class CategoryMapper {
 
     public static Category toCategory(NewCategoryDto source){

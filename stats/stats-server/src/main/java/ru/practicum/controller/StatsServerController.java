@@ -2,6 +2,7 @@ package ru.practicum.controller;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndPointHitDto;
@@ -22,9 +23,9 @@ public class StatsServerController {
     private final EndPointHitService endPointHitService;
 
     @PostMapping("/hit")
-    public void post(@RequestBody @Valid EndPointHitDto endPointHitDto) {
+    public ResponseEntity<EndPointHitDto> post(@RequestBody @Valid EndPointHitDto endPointHitDto) {
         log.info("Запрос создания события в сервере статистики");
-        ResponseEntity.ok(endPointHitService.post(endPointHitDto));
+        return new ResponseEntity<>(endPointHitService.post(endPointHitDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/stats")

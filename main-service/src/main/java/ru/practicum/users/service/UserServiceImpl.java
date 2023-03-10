@@ -15,8 +15,9 @@ import ru.practicum.users.mapper.UserMapper;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +27,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Collection<UserDto> getByIds(Collection<Integer> ids, int from, int size) {
+    public Collection<UserDto> getByIds(List<Long> ids, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);
-        Iterable<User> users;
-        if (ids != null) {
-            users = userRepository.findByIdIn(ids, pageable);
+
+        if (ids.isEmpty()) {
+            return userRepository.findAll(pageable).stream()
+                    .map(UserMapper::toUserDto)
+                    .collect(Collectors.toList());
         } else {
-            users = userRepository.findAll(pageable);
+            return userRepository.findByIds(ids, pageable).stream()
+                    .map(UserMapper::toUserDto)
+                    .collect(Collectors.toList());
         }
-        Collection<UserDto> usersDto = new ArrayList<>();
-        users.forEach(user -> usersDto.add(UserMapper.toUserDto(user)));
-        return usersDto;
     }
 
     @Transactional
@@ -54,4 +56,5 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
         return ResponseEntity.status(204).build();
     }
+
 }

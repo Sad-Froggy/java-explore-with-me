@@ -5,9 +5,10 @@ import ru.practicum.users.dto.NewUserRequest;
 import ru.practicum.users.dto.UserDto;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface UserService {
-    Collection<UserDto> getByIds(Collection<Integer> ids, int from, int size);
+    Collection<UserDto> getByIds(List<Long> ids, int from, int size);
 
     ResponseEntity<UserDto> add(NewUserRequest newUserRequest);
 
