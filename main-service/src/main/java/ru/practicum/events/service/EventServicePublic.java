@@ -78,7 +78,12 @@ public class EventServicePublic {
                     .filter(r -> r.getEvent().getId().equals(eventFullDto.getId())).count());
         }
 
-        EndPointHitDto hitDto = EndPointHitDto.builder().app("APP_NAME").uri("/events").ip(ip).timestamp(LocalDateTime.now()).build();
+        EndPointHitDto hitDto = EndPointHitDto.builder()
+                .app("APP_NAME")
+                .uri("/events")
+                .ip(ip)
+                .timestamp(LocalDateTime.now())
+                .build();
         statsClient.post(hitDto);
         events.forEach(e -> {
             hitDto.setUri("/events/" + e.getId());
