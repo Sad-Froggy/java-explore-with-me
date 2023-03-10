@@ -1,28 +1,29 @@
 package ru.practicum.categories.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.categories.dto.CategoryDto;
-import ru.practicum.categories.mapper.CategoryMapper;
-import ru.practicum.categories.service.CategoryService;
+import ru.practicum.categories.service.CategoryServicePublic;
 
-import java.util.Collection;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryControllerPub {
 
-    private final CategoryService categoryService;
+    private final CategoryServicePublic categoryService;
 
     @GetMapping
-    public Collection<CategoryDto> get(@RequestParam (defaultValue = "0") int from,
-                                       @RequestParam (defaultValue = "10") int size) {
-        return categoryService.getCategories(from, size);
+    public ResponseEntity<Object> getCategories(@RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                                @RequestParam(defaultValue = "10") @Positive Integer size) {
+        return new ResponseEntity<>(categoryService.getCategories(from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{catId}")
-    public CategoryDto getById(@PathVariable Long catId) {
-        return CategoryMapper.toCategoryDto(categoryService.getCategoryById(catId));
+    public ResponseEntity<Object> getCategory(@PathVariable Long catId) {
+        return new ResponseEntity<>(categoryService.getCategory(catId), HttpStatus.OK);
     }
 }
