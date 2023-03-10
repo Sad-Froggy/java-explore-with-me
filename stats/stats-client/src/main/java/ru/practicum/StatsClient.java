@@ -27,7 +27,7 @@ public class StatsClient {
                 .build();
     }
 
-    protected ResponseEntity<List<ViewStatsDto>> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public ResponseEntity<List<ViewStatsDto>> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         StringBuilder uriBuilder = new StringBuilder();
         uriBuilder.append("uris=");
         for (String uri : uris) {
@@ -38,7 +38,7 @@ public class StatsClient {
         });
     }
 
-    protected void post(EndPointHitDto endPointHit) {
+    public void post(EndPointHitDto endPointHit) {
         HttpEntity<EndPointHitDto> requestEntity = new HttpEntity<>(endPointHit);
         rest.exchange("/hit", HttpMethod.POST, requestEntity, EndPointHitDto.class);
     }
