@@ -22,8 +22,8 @@ public class EventPrivateController {
     private final EventServicePrivate eventPrivateService;
 
     @PostMapping
-    public ResponseEntity<Object> addEvent(@PathVariable String userId, @RequestBody @NotNull @Valid NewEventDto newEventDto) {
-        return new ResponseEntity<>(eventPrivateService.addEvent(Long.parseLong(userId), newEventDto), HttpStatus.CREATED);
+    public ResponseEntity<Object> addEvent(@Positive @PathVariable Long userId, @RequestBody @NotNull @Valid NewEventDto newEventDto) {
+        return new ResponseEntity<>(eventPrivateService.addEvent(userId, newEventDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{eventId}")

@@ -15,7 +15,6 @@ import ru.practicum.users.mapper.UserMapper;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Collection<UserDto> getByIds(List<Long> ids, int from, int size) {
+    public List<UserDto> getByIds(List<Long> ids, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);
 
         if (ids.isEmpty()) {
