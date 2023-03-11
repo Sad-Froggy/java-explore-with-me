@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.users.dto.NewUserRequest;
 import ru.practicum.users.dto.UserDto;
 import ru.practicum.users.mapper.UserMapper;
@@ -54,6 +55,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("позже создать своё исключение"));
         userRepository.deleteById(userId);
         return ResponseEntity.status(204).build();
+    }
+
+    @Override
+    public User getByIdForService(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
+                String.format("Пользователь с id: %s не найден", userId)));
     }
 
 }

@@ -9,6 +9,7 @@ import ru.practicum.categories.mapper.CategoryMapper;
 import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.ValidationException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,4 +32,11 @@ public class CategoryServicePublic {
         return CategoryMapper.toCategoryDto(categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException(Category.class.getSimpleName() + " not found")));
     }
+
+    public Category getByIdForService(Long catId) {
+        if (catId == null) throw new ValidationException("Id не может быть null");
+        return categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException(
+                String.format("Пользователь с id: %s не найден", catId)));
+    }
+
 }

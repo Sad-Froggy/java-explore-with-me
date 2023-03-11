@@ -1,33 +1,41 @@
 package ru.practicum.requests.mapper;
 
+import ru.practicum.events.model.Event;
 import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 import ru.practicum.requests.model.ParticipationRequest;
+import ru.practicum.requests.model.RequestStatus;
+import ru.practicum.users.model.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RequestMapper {
 
-    public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest source) {
-        return ParticipationRequestDto.builder()
-                .id(source.getId())
-                .created(source.getCreated())
-                .eventId(source.getEvent().getId())
-                .requesterId(source.getRequester().getId())
-                .status(source.getStatus())
-                .build();
+    public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest request) {
+        ParticipationRequestDto participationRequestDto = new ParticipationRequestDto();
+        participationRequestDto.setCreated(request.getCreated());
+        participationRequestDto.setEventId(request.getEvent().getId());
+        participationRequestDto.setId(request.getId());
+        participationRequestDto.setRequesterId(request.getRequester().getId());
+        participationRequestDto.setStatus(request.getStatus());
+        return participationRequestDto;
     }
 
-    public static EventRequestStatusUpdateResult toRejectedRequest(List<ParticipationRequestDto> source) {
-        return EventRequestStatusUpdateResult.builder()
-                .rejectedRequests(source)
-                .build();
+    public static ParticipationRequest makeRequest(User requester, Event event, Boolean checkModeration) {
+        ParticipationRequest request = new ParticipationRequest();
+        request.setRequester(requester);
+        request.setEvent(event);
+        request.setStatus(checkModeration ? RequestStatus.PENDING : RequestStatus.CONFIRMED);
+        request.setCreated(LocalDateTime.now());
+        event.setConfirmedRequests(event.getConfirmedRequests() + 1L);
+        return request;
     }
 
-    public static EventRequestStatusUpdateResult toConfirmedRequest(List<ParticipationRequestDto> source) {
-        return EventRequestStatusUpdateResult.builder()
-                .confirmedRequests(source)
-                .build();
+    public static void cancelRequest(ParticipationRequest request, Event event) {
+        request.setStatus(RequestStatus.CANCELED);
+        event.setConfirmedRequests(event.getConfirmedRequests() > 0 ? event.getConfirmedRequests() - 1L :
+                event.getConfirmedRequests());
     }
-
 }
+

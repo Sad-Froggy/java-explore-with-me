@@ -11,16 +11,9 @@ import java.util.List;
 
 public interface RequestService {
 
-    ParticipationRequestDto addRequest(Long eventId, Long userId);
+    List<ParticipationRequestDto> getByUserId(Long userId);
 
-    List<ParticipationRequest> findConfirmedRequests(List<Event> events);
+    ParticipationRequestDto createByUserId(Long userId, Long eventId);
 
-    ParticipationRequestDto cancelRequest(Long requestId, Long userId);
-
-    List<ParticipationRequestDto> allUserRequests(Long userId);
-
-    List<ParticipationRequestDto> getEventRequest(Long eventId, Long userId);
-
-    EventRequestStatusUpdateResult update(Long eventId, Long userId, EventRequestStatusUpdateRequest request);
-
+    ParticipationRequestDto cancellationByUserIdAndRequestId(Long userId, Long requestId);
 }

@@ -1,142 +1,148 @@
 package ru.practicum.events.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.categories.model.Category;
-import ru.practicum.categories.repository.CategoryRepository;
+import ru.practicum.categories.service.CategoryServicePublic;
 import ru.practicum.events.dto.EventFullDto;
+import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.NewEventDto;
-import ru.practicum.events.dto.UpdateEventUserRequest;
+import ru.practicum.events.dto.UpdateEventAdminRequest;
+import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.events.state.State;
-import ru.practicum.events.state.StateAction;
-import ru.practicum.exception.DataConflictException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.ValidationException;
+import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
+import ru.practicum.requests.dto.ParticipationRequestDto;
+import ru.practicum.requests.mapper.RequestMapper;
 import ru.practicum.requests.model.ParticipationRequest;
-import ru.practicum.requests.service.RequestService;
+import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.users.model.User;
-import ru.practicum.users.repository.UserRepository;
+import ru.practicum.users.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static ru.practicum.events.mapper.EventMapper.eventToEventFullDto;
-import static ru.practicum.events.mapper.EventMapper.newEventDtoToEvent;
-
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
 public class EventServicePrivate {
-    private final EventRepository eventRepository;
+    private final EventRepository repository;
+    private final RequestRepository requestRepository;
+    private final UserService userService;
+    private final CategoryServicePublic categoryService;
+    private final EventMapper mapper;
+    private static final Long TWO_HOURS = 2L;
+    private static final Long NONE = 0L;
 
-    private final CategoryRepository categoryRepository;
-
-    private final UserRepository userRepository;
-
-    private final EventService eventCommonService;
-
-    private final RequestService requestService;
-
+    public List<EventShortDto> getByUserId(Long userId, Integer from, Integer size) {
+        from = from.equals(size) ? from / size : from;
+        final PageRequest pageRequest = PageRequest.of(from, size, Sort.by(DESC, "id"));
+        List<Event> events = repository.findAllByInitiatorId(userId, pageRequest).getContent();
+        List<EventShortDto> eventShorts = events.stream().map(mapper::toEventShortDto).collect(Collectors.toList());
+        log.info("Получены события: {} добавленные пользователем с id: {}", eventShorts, userId);
+        return eventShorts;
+    }
 
     @Transactional
-    public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
-        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new DataConflictException("Event date should be in the future");
-        }
-        Category category = categoryRepository.findById(newEventDto.getCategory())
-                .orElseThrow(() -> new NotFoundException(Category.class.getSimpleName() + " not found"));
-        Event event = newEventDtoToEvent(newEventDto, category);
-        event.setCategory(category);
-        User initiator = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(User.class.getSimpleName() + " not found"));
-        event.setInitiator(initiator);
-        event.setState(State.PENDING);
-        event.setCreatedOn(LocalDateTime.now());
-        return eventToEventFullDto(eventRepository.save(event));
+    public EventFullDto create(Long userId, NewEventDto newEventDto) {
+        User initiator = userService.getByIdForService(userId);
+        Category category = categoryService.getByIdForService(newEventDto.getCategory());
+        EventFullDto event =
+                mapper.toEventFullDto(repository.save(mapper.toEvent(newEventDto, initiator, category)));
+        log.info("Новое событие -> {} <- добавлено", event);
+        return event;
     }
 
-    @Transactional(readOnly = true)
-    public List<EventFullDto> getUserEvents(Long userId, long from, int size) {
-        PageRequest pageRequest = PageRequest.of(0, size);
-        List<Event> events = eventRepository
-                .findAllByIdIsGreaterThanEqualAndInitiatorIdIs(from, userId, pageRequest);
-        List<EventFullDto> eventFullDtos = eventCommonService.setViewsToEvents(events);
-        List<ParticipationRequest> confirmedRequests = requestService.findConfirmedRequests(events);
-        for (EventFullDto fullDto : eventFullDtos) {
-            fullDto.setConfirmedRequests((int) confirmedRequests.stream()
-                    .filter(r -> r.getEvent().getId().equals(fullDto.getId()))
-                    .count());
-        }
-        return eventFullDtos;
-    }
-
-    @Transactional(readOnly = true)
-    public EventFullDto getUserEvent(Long userId, Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException(Event.class.getSimpleName() + " not found"));
-        if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new NotFoundException("Initiator and user have different ids");
-        }
-        EventFullDto eventFullDto = eventToEventFullDto(event);
-        if (eventFullDto.getState().equals(State.PUBLISHED)) {
-            Map<Long, Long> views = eventCommonService.getStats(List.of(event), false);
-            eventFullDto.setViews(views.get(event.getId()));
-            List<ParticipationRequest> confirmedRequests = requestService
-                    .findConfirmedRequests(List.of(event));
-            eventFullDto.setConfirmedRequests(confirmedRequests.size());
-        }
+    public EventFullDto getFullInfoByEventIdAndUserId(Long userId, Long eventId) {
+        Event event = findByEventIdAndUserId(eventId, userId);
+        EventFullDto eventFullDto = mapper.toEventFullDto(event);
+        log.info("Получена полная информация о событии -> {}", eventFullDto);
         return eventFullDto;
     }
 
     @Transactional
-    public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException(Event.class.getSimpleName() + " not found"));
-        if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new NotFoundException("Only initiator can update event");
-        }
-        Event updatedEvent = patchEvent(event, updateEventUserRequest);
-        switch (updateEventUserRequest.getStateAction()) {
-            case SEND_TO_REVIEW:
-                updatedEvent.setState(State.PENDING);
-                break;
-            case CANCEL_REVIEW:
-                updatedEvent.setState(State.CANCELED);
-                break;
-        }
-        return eventToEventFullDto(eventRepository.save(updatedEvent));
+    public EventFullDto updateByUserIdAndEventId(
+            Long userId, Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+        Event event = findByEventIdAndUserId(eventId, userId);
+        isChangeEvent(event);
+        checkDate(event);
+        EventFullDto eventFullDto = mapper.toEventFullDto(mapper.toUpdateDataAndStatus(
+                event, updateEventAdminRequest, null));
+        log.info("Событие изменено {}", eventFullDto);
+        return eventFullDto;
     }
 
-    private Event patchEvent(Event event, UpdateEventUserRequest updatedEvent) {
-        Optional.ofNullable(updatedEvent.getAnnotation()).ifPresent(event::setAnnotation);
-        Optional.ofNullable(updatedEvent.getDescription()).ifPresent(event::setDescription);
-        Optional.ofNullable(updatedEvent.getEventDate()).ifPresent(event::setEventDate);
-        Optional.ofNullable(updatedEvent.getLocation()).ifPresent(event::setLocation);
-        Optional.ofNullable(updatedEvent.getPaid()).ifPresent(event::setPaid);
-        Optional.ofNullable(updatedEvent.getParticipantLimit()).ifPresent(event::setParticipantLimit);
-        Optional.ofNullable(updatedEvent.getRequestModeration()).ifPresent(event::setRequestModeration);
-        if (updatedEvent.getCategory() != null) {
-            Category category = categoryRepository.findById(updatedEvent.getCategory())
-                    .orElseThrow(() -> new NotFoundException(Category.class.getSimpleName() + " not found"));
-            event.setCategory(category);
-        }
-        if (event.getState().equals(State.PUBLISHED)) {
-            throw new DataConflictException("Event with state: " + event.getState() + " cannot be changed");
-        }
+    public List<ParticipationRequestDto> getRequestByUserIdAndEventId(Long userId, Long eventId) {
+        return getRequest(userId, eventId);
+    }
 
-        if (updatedEvent.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
-            event.setPublishedOn(LocalDateTime.now());
-            event.setState(State.PUBLISHED);
-        } else if (updatedEvent.getStateAction().equals(StateAction.REJECT_EVENT)) {
-            event.setState(State.CANCELED);
+    @Transactional
+    public List<EventRequestStatusUpdateResult> updateStatusRequestByUserIdAndEventId(
+            Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) {
+        Event event = findByEventIdAndUserId(eventId, userId);
+        List<ParticipationRequestDto> participationRequests = getRequest(userId, eventId);
+        if (!checkLimitEvent(event) || !participationRequests.isEmpty()) {
+
+            participationRequests.listIterator();
+
         }
+        List<EventRequestStatusUpdateResult> updateResult = new ArrayList<>();
+        participationRequests.forEach(participationRequest -> updateResult
+                .add(mapper.toUpdateResult(participationRequest, null)));
+        log.info("Изменен статус заявок на участие в событии -> {}", updateResult);
+        return updateResult;
+    }
+
+    private Event findByEventIdAndUserId(Long eventId, Long userId) {
+        Event event = repository.findByIdAndInitiatorId(userId, eventId).orElseThrow(() -> new NotFoundException(
+                String.format("Событие с id: %s не найдено", eventId)));
+        log.info("Найдено событие с id: {}", eventId);
         return event;
     }
 
+    private void isChangeEvent(Event event) {
+        boolean isChange = event.getState().equals(State.CANCELED) ||
+                event.getRequestModeration() || event.getState().equals(State.PENDING);
+        if (!isChange)
+            throw new ValidationException(
+                    "Изменить можно только отмененные события или события в состоянии ожидания модерации");
+    }
+
+    private void checkDate(Event event) {
+        boolean isNotValidDate = event.getEventDate().isBefore(LocalDateTime.now().plusHours(TWO_HOURS));
+        if (isNotValidDate)
+            throw new ValidationException("Дата и время на которые намечено событие не может быть раньше, " +
+                    "чем через два часа от текущего момента");
+    }
+
+    private boolean checkLimitEvent(Event event) {
+        boolean isApprove = event.getParticipantLimit().equals(NONE) ||
+                !event.getRequestModeration();
+        if (isApprove) log.info("Подтверждение заявки не требуется");
+        return isApprove;
+    }
+
+    private List<ParticipationRequestDto> getRequest(Long userId, Long eventId) {
+        Optional<ParticipationRequest> requests = requestRepository.findByEventIdAndRequesterId(eventId, userId);
+        List<ParticipationRequestDto> participationRequests = requests.isEmpty() ? Collections.emptyList() :
+                requests.stream().map(RequestMapper::toParticipationRequestDto).collect(Collectors.toList());
+        log.info("Получена информации о запросах {} на участие в событии с id: {} пользователя с id: {}",
+                participationRequests, eventId, userId);
+        return participationRequests;
+    }
 }

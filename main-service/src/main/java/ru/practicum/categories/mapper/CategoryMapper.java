@@ -14,6 +14,7 @@ public class CategoryMapper {
 
     public static CategoryDto toCategoryDto(Category source) {
         return CategoryDto.builder()
+                .id(source.getId())
                 .name(source.getName())
                 .build();
     }

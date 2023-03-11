@@ -10,34 +10,44 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @Table(name = "events")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String annotation;
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+    @Column
     private Long confirmedRequests;
-    private LocalDateTime createdOn;
+    @Column
     private String description;
+    @Column(name = "created_on")
+    private LocalDateTime createdOn;
+    @Column(name = "event_date")
     private LocalDateTime eventDate;
     @ManyToOne
+    @JoinColumn(name = "initiator_id", referencedColumnName = "id")
     private User initiator;
-    private Boolean paid;
-    private long participantLimit;
-    private LocalDateTime publishedOn;
-    private boolean requestModeration;
-    private State state;
-    private String title;
-    private Integer views;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumns({@JoinColumn(name = "lat"), @JoinColumn(name = "lon")})
+    @Embedded
     private Location location;
+    @Column
+    private Boolean paid;
+    @Column(name = "participant_limit")
+    private Long participantLimit;
+    @Column(name = "published_on")
+    private LocalDateTime publishedOn;
+    @Column(name = "request_moderation")
+    private Boolean requestModeration;
+    @Enumerated(EnumType.STRING)
+    private State state;
+    @Column
+    private String title;
+    @Column
+    private Long views;
 }
 
