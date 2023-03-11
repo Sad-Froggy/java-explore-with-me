@@ -37,7 +37,6 @@ public class EventServiceAdmin {
     private static final Long ONE_HOURS = 1L;
 
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
     @Transactional
     public EventFullDto updateDataAndStatus(Long eventId, UpdateEventAdminRequest request) {
         Event event = eventServicePub.getByIdForService(eventId);
@@ -48,15 +47,14 @@ public class EventServiceAdmin {
         log.info("Обновлено событие {}", eventFullDto);
         return eventFullDto;
     }
-    
-    public List<EventFullDto> getAllByFiltering(List<Long> users, List<State> States, List<Long> categories,
+    public List<EventFullDto> getAllByFiltering(List<Long> users, List<State> states, List<Long> categories,
                                                 String rangeStart, String rangeEnd, Integer from, Integer size) {
         from = from.equals(size) ? from / size : from;
         final PageRequest pageRequest = PageRequest.of(from, size, Sort.by(DESC, "id"));
         List<Event> events = rangeStart.isEmpty() || rangeEnd.isEmpty() ?
-                repository.findAllByFilteringWithoutDate(users, States, categories, pageRequest).getContent() :
+                repository.findAllByFilteringWithoutDate(users, states, categories, pageRequest).getContent() :
                 repository.findAllByFiltering(
-                        users, States, categories, LocalDateTime.parse(rangeStart, formatter),
+                        users, states, categories, LocalDateTime.parse(rangeStart, formatter),
                         LocalDateTime.parse(rangeEnd, formatter), pageRequest).getContent();
         List<EventFullDto> eventFulls =
                 events.stream().map(mapper::toEventFullDto).collect(Collectors.toList());

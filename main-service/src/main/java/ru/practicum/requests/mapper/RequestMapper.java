@@ -1,14 +1,12 @@
 package ru.practicum.requests.mapper;
 
 import ru.practicum.events.model.Event;
-import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 import ru.practicum.requests.model.ParticipationRequest;
 import ru.practicum.requests.model.RequestStatus;
 import ru.practicum.users.model.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class RequestMapper {
 

@@ -5,7 +5,6 @@ import lombok.*;
 import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.events.model.Location;
 import ru.practicum.events.state.State;
-import ru.practicum.users.dto.UserDto;
 import ru.practicum.users.dto.UserShortDto;
 
 import java.time.LocalDateTime;
