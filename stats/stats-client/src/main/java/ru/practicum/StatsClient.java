@@ -9,8 +9,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -28,23 +28,37 @@ public class StatsClient extends BaseClient  {
         );
     }
 
+    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uri, boolean unique) {
+        String path;
+        Map<String, Object> parameters;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public ResponseEntity<Object> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start,
-                "end", end,
-                "uris", uris,
-                "unique", unique);
-        return get(parameters);
+        if (!uri.isEmpty()) {
+            path = "/stats?start={start}&end={end}&uri={uri}&unique={unique}";
+            parameters = Map.of(
+                    "start", start.format(formatter),
+                    "end", end.format(formatter),
+                    "uri", uri,
+                    "unique", unique
+            );
+        } else {
+            path = "/stats?start={start}&end={end}&unique={unique}";
+            parameters = Map.of("start", start.format(formatter), "end", end.format(formatter),
+                    "unique", unique
+            );
+        }
+        return get(path, parameters);
     }
 
-    public ResponseEntity<Object> post(HttpServletRequest request, LocalDateTime timeStamp, String app) {
+
+    public ResponseEntity<Object> post(String uri, String ip, LocalDateTime timeStamp, String app) {
         EndPointHitDto endpointHit = new EndPointHitDto();
         endpointHit.setApp(app);
-        endpointHit.setIp(request.getRemoteAddr());
-        endpointHit.setUri(request.getRequestURI());
+        endpointHit.setIp(ip);
+        endpointHit.setUri(uri);
         endpointHit.setTimestamp(timeStamp);
         log.info("[HTTP Stats Client] сохранение статистики {}", endpointHit);
-        return post(endpointHit);
+        return post("/hit", endpointHit);
     }
+
 }

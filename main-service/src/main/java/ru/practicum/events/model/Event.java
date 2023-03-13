@@ -2,18 +2,18 @@ package ru.practicum.events.model;
 
 import lombok.*;
 import ru.practicum.categories.model.Category;
-import ru.practicum.compilation.model.Compilation;
 import ru.practicum.events.state.State;
 import ru.practicum.users.model.User;
 
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "events")
 public class Event {
     @Id
@@ -51,7 +51,5 @@ public class Event {
     private String title;
     @Column
     private Long views;
-    @ManyToMany(mappedBy = "events")
-    List<Compilation> compilations;
 }
 

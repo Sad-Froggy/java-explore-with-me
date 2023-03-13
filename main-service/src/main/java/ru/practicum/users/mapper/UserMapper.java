@@ -7,14 +7,6 @@ import ru.practicum.users.model.User;
 
 public class UserMapper {
 
-    public static User toUser(UserDto source) {
-        return User.builder()
-                .id(source.getId())
-                .email(source.getEmail())
-                .name(source.getName())
-                .build();
-    }
-
     public static UserShortDto toUserShortDto(User source) {
         return UserShortDto.builder()
                 .id(source.getId())

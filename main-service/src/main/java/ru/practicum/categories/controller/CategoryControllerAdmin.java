@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.categories.dto.NewCategoryDto;
-import ru.practicum.categories.service.CategoryServiceAdmin;
+import ru.practicum.categories.service.impl.CategoryServiceAdminImpl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,21 +19,24 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class CategoryControllerAdmin {
 
-    private final CategoryServiceAdmin categoryAdminService;
+    private final CategoryServiceAdminImpl categoryAdminService;
 
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto) {
-        return new ResponseEntity<>(categoryAdminService.adminCreateCategory(categoryDto), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("{catId}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable Long catId) {
-        categoryAdminService.adminDeleteCategory(catId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("Запрос создания категории от администратора");
+        return new ResponseEntity<>(categoryAdminService.createCategory(categoryDto), HttpStatus.CREATED);
     }
 
     @PatchMapping("{catId}")
     public ResponseEntity<Object> updateCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto, @PathVariable Long catId) {
-        return new ResponseEntity<>(categoryAdminService.adminUpdateCategory(categoryDto, catId), HttpStatus.OK);
+        log.info("Запрос обновления категории от администратора - " + catId);
+        return new ResponseEntity<>(categoryAdminService.updateCategory(categoryDto, catId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{catId}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable Long catId) {
+        log.info("Запрос удаления категории от администратора - " + catId);
+        categoryAdminService.deleteCategory(catId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

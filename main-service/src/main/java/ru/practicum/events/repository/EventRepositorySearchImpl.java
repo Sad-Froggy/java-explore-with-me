@@ -12,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventRepositorySearchImpl implements EventRepositorySearch {
     @PersistenceContext
@@ -26,7 +27,7 @@ public class EventRepositorySearchImpl implements EventRepositorySearch {
         Root<Event> event = query.from(Event.class);
         Predicate predicate = cb.conjunction();
 
-        if (!text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             Predicate annotation = cb.like(cb.lower(event.get("annotation")), "%" + text.toLowerCase() + "%");
             Predicate description = cb.like(cb.lower(event.get("description")), "%" + text.toLowerCase() + "%");
             Predicate hasText = cb.or(description, annotation);
@@ -38,24 +39,27 @@ public class EventRepositorySearchImpl implements EventRepositorySearch {
     }
 
     @Override
-    public List<Event> adminSearch(List<Long> users, List<State> states, List<Long> categories,
-                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, long from, int size) {
+    public List<Event> adminSearch(List<Long> users, List<String> states, List<Long> categories,
+                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Event> query = cb.createQuery(Event.class);
         Root<Event> event = query.from(Event.class);
         Predicate predicate = cb.conjunction();
 
         if (users != null) {
-            Predicate inUsers = event.get("initiator").in(users);
-            predicate = cb.and(predicate, inUsers);
+            Predicate initiators = event.get("initiator").in(users);
+            predicate = cb.and(predicate, initiators);
         }
         if (states != null) {
-            Predicate inStates = event.get("state").in(states);
+            List<State> stateList = states.stream()
+                    .map(State::valueOf)
+                    .collect(Collectors.toList());
+            Predicate inStates = event.get("state").in(stateList);
             predicate = cb.and(predicate, inStates);
         }
         if (categories != null) {
-            Predicate inCategories = event.get("category").in(categories);
-            predicate = cb.and(predicate, inCategories);
+            Predicate category = event.get("category").in(categories);
+            predicate = cb.and(predicate, category);
         }
         if (rangeStart != null) {
             Predicate start = cb.greaterThan(event.get("eventDate"), rangeStart);
