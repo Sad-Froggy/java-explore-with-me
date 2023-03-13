@@ -34,6 +34,6 @@ public class CategoryServicePublicImpl implements CategoryServicePublic {
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long catId) {
         return CategoryMapper.toCategoryDto(categoryRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Категория с id "+ catId + " не найдена")));
+                .orElseThrow(() -> new NotFoundException("Категория с id " + catId + " не найдена")));
     }
 }
