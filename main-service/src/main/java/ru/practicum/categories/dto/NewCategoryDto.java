@@ -11,6 +11,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class NewCategoryDto {
     private Long id;
-    @NotBlank(message = "Поле \"name\" не должно быть пустым")
+    @NotBlank(message = "Поле name не должно быть пустым")
     private String name;
 }

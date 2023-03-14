@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "participation_requests", schema = "public")
+@Table(name = "participation_requests")
 public class ParticipationRequest {
     @EqualsAndHashCode.Exclude
     @Id
