@@ -1,6 +1,7 @@
 package ru.practicum.events.repository;
 
 
+import org.springframework.stereotype.Repository;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.state.State;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Repository
 public class EventRepositorySearchImpl implements EventRepositorySearch {
     @PersistenceContext
     private EntityManager entityManager;
