@@ -40,12 +40,12 @@ public class EventServicePublicImpl implements EventServicePublic {
 
     @Override
     @Transactional
-    public List<EventFullDto> getEventsWithFilters(EventPublicSearch ev, String ip) {
-        if (ev == null) {
+    public List<EventFullDto> getEventsWithFilters(EventPublicSearch eventSearch, String ip) {
+        if (eventSearch == null) {
             return Collections.emptyList();
         }
-        List<Event> events = repository.publicSearch(ev.getText(), ev.getCategories(), ev.getPaid(),
-                ev.getRangeStart(), ev.getRangeEnd(), ev.getFrom(), ev.getSize());
+        List<Event> events = repository.publicSearch(eventSearch.getText(), eventSearch.getCategories(), eventSearch.getPaid(),
+                eventSearch.getRangeStart(), eventSearch.getRangeEnd(), eventSearch.getFrom(), eventSearch.getSize());
         if (events.isEmpty()) {
             return Collections.emptyList();
         }
@@ -65,7 +65,7 @@ public class EventServicePublicImpl implements EventServicePublic {
                 ip,
                 LocalDateTime.now().withNano(0),
                 "ewm-main-service"));
-        if (ev.getSort() != null && ev.getSort().equals(EventSort.VIEWS)) {
+        if (eventSearch.getSort() != null && eventSearch.getSort().equals(EventSort.VIEWS)) {
             return eventDtoList.stream()
                     .sorted(Comparator.comparing(EventFullDto::getViews)).collect(Collectors.toList());
         }
