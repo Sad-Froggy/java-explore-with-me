@@ -1,7 +1,5 @@
 package ru.practicum.users.service.impl;
 
-//TODO исключение
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

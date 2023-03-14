@@ -1,6 +1,5 @@
 package ru.practicum.compilations.mapper;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.compilations.dto.CompilationDto;
 import ru.practicum.compilations.dto.NewCompilationDto;
@@ -12,11 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class CompilationMapper {
 
     public static Compilation toCompilation(NewCompilationDto compilationDto, List<Event> events) {
-
         return Compilation.builder()
                 .events(events)
                 .title(compilationDto.getTitle())
@@ -25,7 +22,6 @@ public class CompilationMapper {
     }
 
     public static CompilationDto toCompilationDto(Compilation compilation) {
-
         return CompilationDto.builder()
                 .id(compilation.getId())
                 .events(compilation.getEvents().stream()
