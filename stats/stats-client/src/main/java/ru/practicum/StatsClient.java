@@ -47,6 +47,7 @@ public class StatsClient extends BaseClient  {
                     "unique", unique
             );
         }
+        log.info("StatsClient - запрос статистики по uri " + uri);
         return get(path, parameters);
     }
 
@@ -57,7 +58,7 @@ public class StatsClient extends BaseClient  {
         endpointHit.setIp(ip);
         endpointHit.setUri(uri);
         endpointHit.setTimestamp(timeStamp);
-        log.info("[HTTP Stats Client] сохранение статистики {}", endpointHit);
+        log.info("StatsClient - сохранение статистики " + endpointHit.getApp());
         return post("/hit", endpointHit);
     }
 
