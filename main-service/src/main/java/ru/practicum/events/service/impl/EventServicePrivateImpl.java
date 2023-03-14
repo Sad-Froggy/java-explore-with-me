@@ -174,7 +174,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     }
 
     private Event findByEventIdAndUserId(Long eventId, Long userId) {
-        Event event = repository.findByIdAndInitiatorId(userId, eventId).orElseThrow(() -> new NotFoundException(
+        Event event = repository.findByIdAndInitiatorId(eventId, userId).orElseThrow(() -> new NotFoundException(
                 String.format("Событие с id - " + eventId + " не найдено")));
         log.info("Найдено событие с id - " + eventId);
         return event;
