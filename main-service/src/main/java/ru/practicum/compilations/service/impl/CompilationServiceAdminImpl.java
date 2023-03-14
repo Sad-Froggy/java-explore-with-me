@@ -16,6 +16,7 @@ import ru.practicum.events.repository.EventRepository;
 import ru.practicum.util.EwmObjectFinder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,12 +56,8 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
                     .map(finder::findEvent)
                     .collect(Collectors.toList()));
         }
-        if (updateDto.getPinned() != null) {
-            compilation.setPinned(updateDto.getPinned());
-        }
-        if (updateDto.getTitle() != null) {
-            compilation.setTitle(updateDto.getTitle());
-        }
+        Optional.ofNullable(updateDto.getPinned()).ifPresent(compilation::setPinned);
+        Optional.ofNullable(updateDto.getTitle()).ifPresent(compilation::setTitle);
         Compilation updatedCompilation = compilationRepository.save(compilation);
         log.info("Обновлена подборка событий + " + updatedCompilation.getTitle());
         return CompilationMapper.toCompilationDto(updatedCompilation);
