@@ -39,7 +39,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
         if (request.getEventDate() != null) {
             checkDate(request.getEventDate(), event.getPublishedOn());
         }
-        if (!event.getState().equals(State.PENDING)) {
+        if (event.getState() != State.PENDING) {
             throw new DataConflictException("Нельзя изменить событие. Статус события должен быть PENDING");
         }
         Category category = request.getCategory() == null ? null : finder.findCategory(request.getCategory());
