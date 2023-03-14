@@ -42,6 +42,13 @@ public class EwmObjectFinder {
                 .orElseThrow(() -> new NotFoundException("Пользователь с id - " + id + "не найден"));
     }
 
+    public void checkUserExistenceById(Long id) {
+        if (id == null) throw new ValidationException("Id пользователя не указан");
+        if (userRepository.findById(id).isEmpty()) {
+            throw new NotFoundException("Пользователь с id - " + id + "не найден");
+        }
+    }
+
     public Event findEvent(Long id) {
         return eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Событие с id - " + id + "не найдено"));
@@ -51,6 +58,13 @@ public class EwmObjectFinder {
         if (id == null) throw new ValidationException("Id категории не указан");
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Категория с id - " + id + "не найдена"));
+    }
+
+    public void checkCategoryExistenceById(Long id) {
+        if (id == null) throw new ValidationException("Id категории не указан");
+        if (categoryRepository.findById(id).isEmpty()) {
+            throw new NotFoundException("Категория с id - " + id + "не найдена");
+        }
     }
 
     public ParticipationRequest findRequest(Long id) {

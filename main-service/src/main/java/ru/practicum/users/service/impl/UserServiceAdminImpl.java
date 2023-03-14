@@ -59,7 +59,7 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
     @Transactional
     @Override
     public ResponseEntity<Object> deleteUser(Long userId) {
-        finder.findUser(userId); // проверить наличие
+        finder.checkUserExistenceById(userId);
         userRepository.deleteById(userId);
         return ResponseEntity.status(204).build();
     }

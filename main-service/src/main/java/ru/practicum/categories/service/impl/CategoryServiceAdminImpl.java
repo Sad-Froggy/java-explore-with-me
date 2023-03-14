@@ -59,7 +59,7 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     @Override
     @Transactional
     public CategoryDto updateCategory(NewCategoryDto categoryDto, Long catId) {
-        finder.findCategory(catId); //проверить на наличие по id
+        finder.checkCategoryExistenceById(catId);
         categoryDto.setId(catId);
         try {
             Category updatedCategory = categoryRepository.save(CategoryMapper.toCategory(categoryDto));
