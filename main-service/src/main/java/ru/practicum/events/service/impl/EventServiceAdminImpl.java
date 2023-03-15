@@ -64,7 +64,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
         }
     }
 
-    public List<EventFullDto> addViewsFromStatistic(List<Event> events) {
+    private List<EventFullDto> addViewsFromStatistic(List<Event> events) {
         List<EventFullDto> eventDtoList = events.stream()
                 .map(EventMapper::toEventFullDto).collect(Collectors.toList());
 
