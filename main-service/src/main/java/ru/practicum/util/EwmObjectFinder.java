@@ -30,7 +30,9 @@ public class EwmObjectFinder {
     }
 
     public void checkUserExistenceById(Long id) {
-        if (id == null) throw new ValidationException("Id пользователя не указан");
+        if (id == null) {
+            throw new ValidationException("Id пользователя не указан");
+        }
         if (userRepository.findById(id).isEmpty()) {
             throw new NotFoundException("Пользователь с id - " + id + "не найден");
         }
