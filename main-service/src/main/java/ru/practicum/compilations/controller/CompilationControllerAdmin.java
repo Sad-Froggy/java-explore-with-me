@@ -3,27 +3,26 @@ package ru.practicum.compilations.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilations.dto.CompilationDto;
 import ru.practicum.compilations.dto.NewCompilationDto;
 import ru.practicum.compilations.dto.UpdateCompilationDto;
 import ru.practicum.compilations.service.CompilationServiceAdmin;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping(path = "/admin/compilations")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class CompilationControllerAdmin {
     private final CompilationServiceAdmin compilationServiceAdmin;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto create(
-            @RequestBody @Validated NewCompilationDto newCompilationDto) {
+            @RequestBody @Valid NewCompilationDto newCompilationDto) {
         log.info("Запрос создания подборки от администратора");
         return compilationServiceAdmin.createCompilation(newCompilationDto);
     }
@@ -39,7 +38,7 @@ public class CompilationControllerAdmin {
     @PatchMapping("/{compId}")
     public CompilationDto update(
             @PathVariable("compId") @Positive Long compId,
-            @RequestBody @Validated UpdateCompilationDto dto) {
+            @RequestBody @Valid UpdateCompilationDto dto) {
         log.info("Запрос обновления подборки от администратора - " + compId);
         return compilationServiceAdmin.updateCompilation(compId, dto);
     }

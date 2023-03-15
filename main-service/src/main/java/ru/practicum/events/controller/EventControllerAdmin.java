@@ -3,7 +3,6 @@ package ru.practicum.events.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.EventAdminSearch;
 import ru.practicum.events.dto.EventFullDto;
@@ -19,7 +18,6 @@ import java.util.List;
 @RequestMapping(path = "/admin/events")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class EventControllerAdmin {
     private final EventServiceAdmin serviceAdmin;
 

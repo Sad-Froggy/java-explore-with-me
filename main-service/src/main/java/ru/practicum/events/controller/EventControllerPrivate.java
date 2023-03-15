@@ -3,7 +3,6 @@ package ru.practicum.events.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.*;
 import ru.practicum.events.service.EventServicePrivate;
@@ -11,6 +10,7 @@ import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping(path = "/users/{userId}/events")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class EventControllerPrivate {
     private final EventServicePrivate eventServicePriv;
 
@@ -36,7 +35,7 @@ public class EventControllerPrivate {
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto create(
             @PathVariable("userId") @PositiveOrZero Long userId,
-            @RequestBody @Validated NewEventDto newEventDto) {
+            @RequestBody @Valid NewEventDto newEventDto) {
         log.info("Запрос добавления нового события от пользователя с id - " + userId);
         return eventServicePriv.createEvent(userId, newEventDto);
     }

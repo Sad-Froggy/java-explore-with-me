@@ -3,7 +3,6 @@ package ru.practicum.requests.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 import ru.practicum.requests.service.RequestServicePrivate;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequestMapping(path = "/users/{userId}/requests")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class RequestControllerPrivate {
     private final RequestServicePrivate requestServicePrivate;
 

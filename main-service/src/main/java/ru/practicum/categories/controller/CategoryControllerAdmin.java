@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.categories.dto.NewCategoryDto;
 import ru.practicum.categories.service.impl.CategoryServiceAdminImpl;
@@ -16,7 +15,6 @@ import javax.validation.constraints.NotNull;
 @RequestMapping(path = "/admin/categories")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class CategoryControllerAdmin {
 
     private final CategoryServiceAdminImpl categoryAdminService;
