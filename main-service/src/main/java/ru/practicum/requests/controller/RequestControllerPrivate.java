@@ -37,6 +37,7 @@ public class RequestControllerPrivate {
     }
 
     @PatchMapping("/{requestId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancellationByUserIdAndRequestId(
             @PathVariable("userId") @PositiveOrZero Long userId,
             @PathVariable("requestId") @PositiveOrZero Long requestId) {

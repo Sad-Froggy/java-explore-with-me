@@ -3,8 +3,6 @@ package ru.practicum.users.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.exception.DataConflictException;
@@ -45,10 +43,10 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
 
     @Transactional
     @Override
-    public ResponseEntity<UserDto> createUser(NewUserRequest newUserRequest) {
+    public UserDto createUser(NewUserRequest newUserRequest) {
         try {
             User user = userRepository.save(UserMapper.toUser(newUserRequest));
-            return new ResponseEntity<>(UserMapper.toUserDto(user), HttpStatus.CREATED);
+            return UserMapper.toUserDto(user);
         } catch (Exception e) {
             throw new DataConflictException("Пользователь с таким email уже существует - " + newUserRequest.getEmail());
         }
@@ -56,9 +54,8 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
 
     @Transactional
     @Override
-    public ResponseEntity<Object> deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         finder.checkUserExistenceById(userId);
         userRepository.deleteById(userId);
-        return ResponseEntity.status(204).build();
     }
 }

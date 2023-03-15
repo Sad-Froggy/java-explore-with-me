@@ -49,6 +49,7 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateByUserIdAndEventId(
             @PathVariable("userId") @PositiveOrZero Long userId,
             @PathVariable("eventId") @PositiveOrZero Long eventId,
@@ -66,6 +67,7 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResult updateStatusRequestByUserIdAndEventId(
             @PathVariable("userId") @PositiveOrZero Long userId,
             @PathVariable("eventId") @PositiveOrZero Long eventId,
