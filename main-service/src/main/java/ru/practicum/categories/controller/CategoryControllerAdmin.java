@@ -1,10 +1,11 @@
 package ru.practicum.categories.controller;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.dto.NewCategoryDto;
 import ru.practicum.categories.service.impl.CategoryServiceAdminImpl;
 
@@ -20,17 +21,15 @@ public class CategoryControllerAdmin {
     private final CategoryServiceAdminImpl categoryAdminService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto createCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto) {
+    public ResponseEntity<Object> createCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto) {
         log.info("Запрос создания категории от администратора");
-        return categoryAdminService.createCategory(categoryDto);
+        return new ResponseEntity<>(categoryAdminService.createCategory(categoryDto), HttpStatus.CREATED);
     }
 
     @PatchMapping("{catId}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryDto updateCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto, @PathVariable Long catId) {
+    public ResponseEntity<Object> updateCategory(@RequestBody @NotNull @Valid NewCategoryDto categoryDto, @PathVariable Long catId) {
         log.info("Запрос обновления категории от администратора - " + catId);
-        return categoryAdminService.updateCategory(categoryDto, catId);
+        return new ResponseEntity<>(categoryAdminService.updateCategory(categoryDto, catId), HttpStatus.OK);
     }
 
     @DeleteMapping("{catId}")
