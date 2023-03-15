@@ -1,6 +1,6 @@
 package ru.practicum.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
@@ -16,6 +16,7 @@ import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
 
 @Service
+@AllArgsConstructor
 public class EwmObjectFinder {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
@@ -23,23 +24,9 @@ public class EwmObjectFinder {
     private final RequestRepository requestRepository;
     private final CompilationRepository compilationRepository;
 
-    @Autowired
-    public EwmObjectFinder(UserRepository userRepository,
-                                   CategoryRepository categoryRepository,
-                                   EventRepository eventRepository,
-                                   RequestRepository requestRepository,
-                                   CompilationRepository compilationRepository) {
-        this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
-        this.eventRepository = eventRepository;
-        this.requestRepository = requestRepository;
-        this.compilationRepository = compilationRepository;
-    }
-
-
     public User findUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id - " + id + "не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id - " + id + " не найден"));
     }
 
     public void checkUserExistenceById(Long id) {
