@@ -8,6 +8,6 @@ public interface CategoryServicePublic {
 
     List<CategoryDto> getCategories(Long from, Integer size);
 
-    CategoryDto getCategory(Long catId);
+    CategoryDto getCategoryById(Long catId);
 
 }

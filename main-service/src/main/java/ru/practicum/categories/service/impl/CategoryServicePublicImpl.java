@@ -30,7 +30,7 @@ public class CategoryServicePublicImpl implements CategoryServicePublic {
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDto getCategory(Long catId) {
+    public CategoryDto getCategoryById(Long catId) {
         return CategoryMapper.toCategoryDto(categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id " + catId + " не найдена")));
     }

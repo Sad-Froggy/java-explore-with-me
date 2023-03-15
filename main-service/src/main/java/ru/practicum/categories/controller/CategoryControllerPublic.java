@@ -28,6 +28,6 @@ public class CategoryControllerPublic {
     @GetMapping("/{catId}")
     public ResponseEntity<Object> getCategory(@PathVariable Long catId) {
         log.info("Запрос категории по id от пользователя - " + catId);
-        return new ResponseEntity<>(categoryService.getCategory(catId), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getCategoryById(catId), HttpStatus.OK);
     }
 }

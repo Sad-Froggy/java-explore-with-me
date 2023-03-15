@@ -23,6 +23,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
 
     private final CategoryRepository categoryRepository;
@@ -30,7 +31,6 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     private final EwmObjectFinder finder;
 
     @Override
-    @Transactional
     public CategoryDto createCategory(NewCategoryDto categoryDto) {
         Optional<Category> categoryByName = categoryRepository.findByName(categoryDto.getName());
         if (categoryByName.isPresent()) {
@@ -42,7 +42,6 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     }
 
     @Override
-    @Transactional
     public void deleteCategory(Long categoryId) {
         List<Event> eventList = eventRepository.findAllByCategoryId(categoryId);
         if (!eventList.isEmpty()) {
@@ -57,7 +56,6 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     }
 
     @Override
-    @Transactional
     public CategoryDto updateCategory(NewCategoryDto categoryDto, Long catId) {
         finder.checkCategoryExistenceById(catId);
         categoryDto.setId(catId);
