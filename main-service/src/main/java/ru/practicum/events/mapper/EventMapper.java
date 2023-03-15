@@ -79,9 +79,9 @@ public class EventMapper {
         if (request.getPaid() != null) event.setPaid(request.getPaid());
         if (request.getParticipantLimit() != null) event.setParticipantLimit(request.getParticipantLimit());
         if (request.getRequestModeration() != null) event.setRequestModeration(request.getRequestModeration());
-        if (request.getStateAction().equals(StateAction.PUBLISH_EVENT)) event.setState(State.PUBLISHED);
-        if (request.getStateAction().equals(StateAction.REJECT_EVENT)) event.setState(State.CANCELED);
-        if (request.getStateAction().equals(StateAction.CANCEL_REVIEW)) event.setState(State.CANCELED);
+        if (request.getStateAction() == StateAction.PUBLISH_EVENT) event.setState(State.PUBLISHED);
+        if (request.getStateAction() == StateAction.REJECT_EVENT) event.setState(State.CANCELED);
+        if (request.getStateAction() == StateAction.CANCEL_REVIEW) event.setState(State.CANCELED);
         if (request.getTitle() != null) event.setTitle(request.getTitle());
         return event;
     }
@@ -95,10 +95,10 @@ public class EventMapper {
         if (request.getPaid() != null) event.setPaid(request.getPaid());
         if (request.getParticipantLimit() != null) event.setParticipantLimit(request.getParticipantLimit());
         if (request.getRequestModeration() != null) event.setRequestModeration(request.getRequestModeration());
-        if (request.getStateAction().equals(StateAction.PUBLISH_EVENT)) event.setState(State.PUBLISHED);
-        if (request.getStateAction().equals(StateAction.REJECT_EVENT)) event.setState(State.CANCELED);
-        if (request.getStateAction().equals(StateAction.CANCEL_REVIEW)) event.setState(State.CANCELED);
-        if (request.getStateAction().equals(StateAction.SEND_TO_REVIEW)) event.setState(State.PENDING);
+        if (request.getStateAction() == StateAction.PUBLISH_EVENT) event.setState(State.PUBLISHED);
+        if (request.getStateAction() == StateAction.REJECT_EVENT) event.setState(State.CANCELED);
+        if (request.getStateAction() == StateAction.CANCEL_REVIEW) event.setState(State.CANCELED);
+        if (request.getStateAction() == StateAction.SEND_TO_REVIEW) event.setState(State.PENDING);
         if (request.getTitle() != null) event.setTitle(request.getTitle());
         return event;
     }

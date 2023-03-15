@@ -84,7 +84,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
             checkEventDate(updateEventAdminRequest.getEventDate());
         }
         Event event = findByEventIdAndUserId(eventId, userId);
-        if (event.getState().equals(State.PUBLISHED)) {
+        if (event.getState() == State.PUBLISHED) {
             throw new DataConflictException("Нельзя уже опубликованное событие");
         }
         isChangeable(event);
@@ -194,8 +194,8 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     }
 
     private void isChangeable(Event event) {
-        boolean isChangeable = event.getState().equals(State.CANCELED) ||
-                event.getRequestModeration() || event.getState().equals(State.PENDING);
+        boolean isChangeable = event.getState() == State.CANCELED ||
+                event.getRequestModeration() || event.getState() == State.PENDING;
         if (!isChangeable)
             throw new ValidationException(
                     "Изменить можно только отмененные события или события в состоянии ожидания модерации");

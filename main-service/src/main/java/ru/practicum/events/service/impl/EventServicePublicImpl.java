@@ -77,7 +77,7 @@ public class EventServicePublicImpl implements EventServicePublic {
     @Transactional(readOnly = true)
     public EventFullDto getEventById(Long eventId, HttpServletRequest request) {
         Event event = finder.findEvent(eventId);
-        if (!event.getState().equals(State.PUBLISHED)) {
+        if (event.getState() != State.PUBLISHED) {
             throw new NotFoundException(event + " not found");
         }
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
