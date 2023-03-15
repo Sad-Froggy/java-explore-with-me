@@ -1,7 +1,5 @@
 package ru.practicum.events.mapper;
 
-
-import org.springframework.stereotype.Component;
 import ru.practicum.categories.mapper.CategoryMapper;
 import ru.practicum.categories.model.Category;
 import ru.practicum.events.dto.*;
@@ -13,7 +11,6 @@ import ru.practicum.users.model.User;
 
 import java.time.LocalDateTime;
 
-@Component
 public class EventMapper {
 
     public static Event toEvent(NewEventDto newEventDto, User initiator, Category category) {
