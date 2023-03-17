@@ -27,8 +27,8 @@ public class CommentControllerAdmin {
 
     @GetMapping("/user/{userId}")
     public List<CommentDto> getByUserId(@PathVariable Long userId,
-                                      @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
-                                      @Positive @RequestParam(required = false, defaultValue = "10") Integer size) {
+                                        @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
+                                        @Positive @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("Запрос комментария по id пользователя - " + userId);
         return commentServiceAdmin.getCommentsByUserId(userId, from, size);
     }

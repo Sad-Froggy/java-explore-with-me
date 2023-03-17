@@ -27,6 +27,7 @@ public class CommentServiceAdminImpl implements CommentServiceAdmin {
     private final CommentRepository commentRepository;
 
     private final EwmObjectFinder finder;
+
     @Override
     public List<CommentDto> getCommentsByUserId(Long userId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "created"));
