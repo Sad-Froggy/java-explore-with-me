@@ -948,7 +948,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/user/1",
+							"raw": "http://localhost:8080/admin/comments/user/{{firstUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -958,14 +958,7 @@
 								"admin",
 								"comments",
 								"user",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
+								"{{firstUserId}}"
 							]
 						}
 					},
@@ -1015,7 +1008,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/comments/event/1",
+							"raw": "http://localhost:8080/comments/event/{{firstEventId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1024,7 +1017,7 @@
 							"path": [
 								"comments",
 								"event",
-								"1"
+								"{{firstEventId}}"
 							],
 							"query": [
 								{
