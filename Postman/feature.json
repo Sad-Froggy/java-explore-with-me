@@ -989,6 +989,7 @@
 									"});",
 									"",
 									"const target = pm.response.json()[0];",
+									"const secondObj = pm.response.json()[1];",
 									"",
 									"pm.test(\"Комментарий должен содержать поля id, content, eventId, commentator, created, replyingTo, editedOn, edited\", function () {",
 									"pm.expect(target).to.have.property('id');",
@@ -1002,7 +1003,8 @@
 									"});",
 									"",
 									"pm.test(\"id комментария должен соответствовать запрошенному\", function () {",
-									"    pm.expect(target.id).equal(3);",
+									"    pm.expect(target.id).equal(1);",
+									"    pm.expect(secondObj.id).equal(3);",
 									"    });"
 								],
 								"type": "text/javascript"

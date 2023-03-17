@@ -11,6 +11,7 @@ import ru.practicum.comments.mapper.CommentMapper;
 import ru.practicum.comments.model.Comment;
 import ru.practicum.comments.repository.CommentRepository;
 import ru.practicum.comments.service.CommentServicePublic;
+import ru.practicum.util.EwmObjectFinder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 public class CommentServicePublicImpl implements CommentServicePublic {
 
     private final CommentRepository commentRepository;
+
+    private final EwmObjectFinder finder;
 
     @Override
     public List<CommentDto> getByEventId(Long eventId, int from, int size) {
@@ -33,8 +36,10 @@ public class CommentServicePublicImpl implements CommentServicePublic {
 
     @Override
     public List<CommentDto> getReplies(Long commentId, int from, int size) {
-        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "created"));
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "created"));
+        Comment firstComment = finder.findComment(commentId);
         List<Comment> comments = commentRepository.findByReplyingTo(commentId, pageable);
+        comments.add(0, firstComment);
         return comments.stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
