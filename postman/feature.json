@@ -17,6 +17,9 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"firstUserId\", jsonData[\"id\"]);",
+									"",
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
@@ -67,13 +70,13 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"secondUserId\", jsonData[\"id\"]);",
+									"",
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
-									"});",
-									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"pm.collectionVariables.set(\"secondUserId\", jsonData[\"id\"]);"
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -120,13 +123,15 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"thridUserId\", jsonData[\"id\"]);",
+									"",
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
 									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"pm.collectionVariables.set(\"thridUserId\", jsonData[\"id\"]);"
+									""
 								],
 								"type": "text/javascript"
 							}
