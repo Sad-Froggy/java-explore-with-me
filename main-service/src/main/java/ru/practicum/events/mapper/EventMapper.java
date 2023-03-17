@@ -15,6 +15,7 @@ public class EventMapper {
 
     public static Event toEvent(NewEventDto newEventDto, User initiator, Category category) {
         LocalDateTime currentTime = LocalDateTime.now();
+        boolean disableComments = newEventDto.getDisableComments() != null && newEventDto.getDisableComments();
         return Event.builder()
                 .annotation(newEventDto.getAnnotation())
                 .category(category)
@@ -25,6 +26,7 @@ public class EventMapper {
                 .initiator(initiator)
                 .location(newEventDto.getLocation())
                 .paid(newEventDto.getPaid())
+                .disableComments(disableComments)
                 .participantLimit(newEventDto.getParticipantLimit())
                 .publishedOn(currentTime)
                 .requestModeration(newEventDto.getRequestModeration())
@@ -46,6 +48,7 @@ public class EventMapper {
                 .initiator(UserMapper.toUserShortDto(event.getInitiator()))
                 .location(event.getLocation())
                 .paid(event.getPaid())
+                .disableComments(event.getDisableComments())
                 .participantLimit(event.getParticipantLimit())
                 .publishedOn(event.getPublishedOn())
                 .requestModeration(event.getRequestModeration())
@@ -77,6 +80,7 @@ public class EventMapper {
         if (request.getEventDate() != null) event.setEventDate(request.getEventDate());
         if (request.getLocation() != null) event.setLocation(request.getLocation());
         if (request.getPaid() != null) event.setPaid(request.getPaid());
+        if (request.getDisableComments() != null) event.setDisableComments(request.getDisableComments());
         if (request.getParticipantLimit() != null) event.setParticipantLimit(request.getParticipantLimit());
         if (request.getRequestModeration() != null) event.setRequestModeration(request.getRequestModeration());
         if (request.getStateAction() == StateAction.PUBLISH_EVENT) event.setState(State.PUBLISHED);

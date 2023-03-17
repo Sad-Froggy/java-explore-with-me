@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.categories.model.Category;
+import ru.practicum.comments.repository.CommentRepository;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.NewEventDto;
@@ -45,6 +46,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     private final EwmObjectFinder finder;
     private final EventRepository repository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private static final Long HOURS_FROM_NOW = 2L;
 
     @Override
@@ -79,17 +81,22 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     @Override
     @Transactional
     public EventFullDto updateEventByIdAndUserId(
-            Long userId, Long eventId, UpdateEventUserRequest updateEventAdminRequest) {
-        if (updateEventAdminRequest.getEventDate() != null) {
-            checkEventDate(updateEventAdminRequest.getEventDate());
+            Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
+        if (updateEventUserRequest.getEventDate() != null) {
+            checkEventDate(updateEventUserRequest.getEventDate());
         }
         Event event = findByEventIdAndUserId(eventId, userId);
         if (event.getState() == State.PUBLISHED) {
-            throw new DataConflictException("Нельзя уже опубликованное событие");
+            throw new DataConflictException("Нельзя редактировать уже опубликованное событие");
+        }
+        if (updateEventUserRequest.getDisableComments() != null &&
+                updateEventUserRequest.getDisableComments() &&
+                !commentRepository.findByEventId(eventId, PageRequest.of(0, 1)).isEmpty()) {
+            throw new DataConflictException("Нельзя закрыть комментарии когда они уже есть у события");
         }
         isChangeable(event);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(EventMapper.updateEventUser(
-                event, updateEventAdminRequest, null));
+                event, updateEventUserRequest, null));
         log.info("Обновлено событие - " + eventFullDto.getTitle());
         return eventFullDto;
     }

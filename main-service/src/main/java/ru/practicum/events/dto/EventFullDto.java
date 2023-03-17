@@ -27,6 +27,7 @@ public class EventFullDto {
     private UserShortDto initiator;
     private Location location;
     private Boolean paid;
+    private Boolean disableComments;
     private Long participantLimit;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publishedOn;

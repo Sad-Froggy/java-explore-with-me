@@ -39,6 +39,8 @@ public class Event {
     private Location location;
     @Column(nullable = false)
     private Boolean paid;
+    @Column(name = "disable_comments", nullable = false)
+    private Boolean disableComments;
     @Column(name = "participant_limit")
     private Long participantLimit;
     @Column(name = "published_on")

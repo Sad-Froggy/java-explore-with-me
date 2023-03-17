@@ -2,9 +2,11 @@ package ru.practicum.events.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.categories.model.Category;
+import ru.practicum.comments.repository.CommentRepository;
 import ru.practicum.events.dto.EventAdminSearch;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.UpdateEventAdminRequest;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class EventServiceAdminImpl implements EventServiceAdmin {
     private final EventRepository repository;
+    private final CommentRepository commentRepository;
     private final EventServiceUtil utilService;
     private static final Long TIME_DIFFERENCE = 1L;
     private final EwmObjectFinder finder;
@@ -41,6 +44,12 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
         }
         if (event.getState() != State.PENDING) {
             throw new DataConflictException("Нельзя изменить событие. Статус события должен быть PENDING");
+        }
+        if (request.getDisableComments() != null &&
+                request.getDisableComments() &&
+                !commentRepository.findByEventId(eventId, PageRequest.of(0, 1)).isEmpty()) {
+            log.info("все комментарии события удалены и возможность комментирования отключена");
+            commentRepository.deleteCommentsByEventId(eventId);
         }
         Category category = request.getCategory() == null ? null : finder.findCategory(request.getCategory());
         EventFullDto eventFullDto = EventMapper.toEventFullDto(repository.save(

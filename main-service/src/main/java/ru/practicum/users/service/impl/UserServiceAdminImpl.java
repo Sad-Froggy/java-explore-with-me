@@ -1,10 +1,12 @@
 package ru.practicum.users.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.comments.service.CommentServiceAdmin;
 import ru.practicum.exception.DataConflictException;
 import ru.practicum.users.dto.NewUserRequest;
 import ru.practicum.users.dto.UserDto;
@@ -20,9 +22,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class UserServiceAdminImpl implements UserServiceAdmin {
 
     private final UserRepository userRepository;
+
+    private final CommentServiceAdmin commentServiceAdmin;
 
     private final EwmObjectFinder finder;
 
@@ -56,6 +61,8 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
     @Override
     public void deleteUser(Long userId) {
         finder.checkUserExistenceById(userId);
+        commentServiceAdmin.deleteCommentsByUser(userId);
+        log.info("Комментарии пользователя с id - " + userId + " удалены");
         userRepository.deleteById(userId);
     }
 }

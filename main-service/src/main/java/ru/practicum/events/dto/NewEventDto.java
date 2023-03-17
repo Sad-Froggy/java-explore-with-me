@@ -29,6 +29,7 @@ public class NewEventDto {
     @NotNull(message = "Широта и долгота не может быть null")
     private Location location;
     private Boolean paid;
+    private Boolean disableComments;
     private Long participantLimit;
     private Boolean requestModeration;
     @NotBlank(message = "Заголовок события не может быть null и состоять из пробелов")
