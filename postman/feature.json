@@ -70,7 +70,10 @@
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
-									"});"
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"secondUserId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -120,7 +123,10 @@
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
-									"});"
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"thridUserId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -171,7 +177,9 @@
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
-									""
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"CommentsCategoryId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -231,7 +239,10 @@
 									"",
 									"pm.test(\"disableComments по умолчанию должно быть false\", function () {",
 									"    pm.expect(target.disableComments.toString()).equal('false');",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"firstEventId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -253,10 +264,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"annotation\":\"тестовое событие\",\"category\":1,\"description\":\"событие которое можно комментировать\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"напишите мне комментарий\"}"
+							"raw": "{\"annotation\":\"тестовое событие\",\"category\":{{CommentsCategoryId}},\"description\":\"событие которое можно комментировать\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"напишите мне комментарий\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/1/events",
+							"raw": "http://localhost:8080/users/:userId/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -264,8 +275,14 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"1",
+								":userId",
 								"events"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{firstUserId}}"
+								}
 							]
 						}
 					},
@@ -363,13 +380,16 @@
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
 									"    pm.expect(target.id).equal(1);",
-									"    pm.expect(target.commentator.id).equal(1);",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"firstUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser1\");",
-									"    pm.expect(target.eventId).equal(1);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"firstEventId\"));",
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"firstCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -403,7 +423,7 @@
 							"raw": "{\"content\":\"первый тестовый комментарий пользователь 1, событие 1\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/1?userId=1",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{firstUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -413,12 +433,18 @@
 								"users",
 								"comments",
 								"events",
-								"1"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{firstUserId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
 								}
 							]
 						}
@@ -461,7 +487,10 @@
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"secondCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -495,7 +524,7 @@
 							"raw": "{\"content\":\"второй тестовый комментарий пользователь 1, событие 1\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/1?userId=1",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{firstUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -505,12 +534,18 @@
 								"users",
 								"comments",
 								"events",
-								"1"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{firstUserId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
 								}
 							]
 						}
@@ -547,13 +582,16 @@
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
 									"    pm.expect(target.id).equal(3);",
-									"    pm.expect(target.commentator.id).equal(2);",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"secondUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser2\");",
-									"    pm.expect(target.eventId).equal(1);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"firstEventId\"));",
 									"    pm.expect(target.replyingTo).equal(1);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"thirdCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -587,7 +625,7 @@
 							"raw": "{\"content\":\"тестовый комментарий пользователь 2, событие 1\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/1?userId=2&replyingTo=1",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{secondUserId}}&replyingTo={{firstCommentId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -597,16 +635,22 @@
 								"users",
 								"comments",
 								"events",
-								"1"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "2"
+									"value": "{{secondUserId}}"
 								},
 								{
 									"key": "replyingTo",
-									"value": "1"
+									"value": "{{firstCommentId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
 								}
 							]
 						}
@@ -643,13 +687,16 @@
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
 									"    pm.expect(target.id).equal(4);",
-									"    pm.expect(target.commentator.id).equal(3);",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"thridUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser3\");",
-									"    pm.expect(target.eventId).equal(1);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"firstEventId\"));",
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fourthCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -683,7 +730,7 @@
 							"raw": "{\"content\":\"тестовый комментарий пользователь 2, событие 1\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/1?userId=3",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{thridUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -693,12 +740,18 @@
 								"users",
 								"comments",
 								"events",
-								"1"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "3"
+									"value": "{{thridUserId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
 								}
 							]
 						}
@@ -750,7 +803,7 @@
 							"raw": "{\"content\":\"тестовый комментарий пользователь 2, событие 2\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/2?userId=3&eventId=2",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{thridUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -760,16 +813,18 @@
 								"users",
 								"comments",
 								"events",
-								"2"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "3"
-								},
+									"value": "{{thridUserId}}"
+								}
+							],
+							"variable": [
 								{
 									"key": "eventId",
-									"value": "2"
+									"value": "{{secondEventId}}"
 								}
 							]
 						}
@@ -803,7 +858,7 @@
 									"});",
 									"",
 									"pm.test(\"id комментария должен соответствовать запрошенному\", function () {",
-									"    pm.expect(target.id).equal(1);",
+									"    pm.expect(target.id).equal(pm.variables.get(\"firstCommentId\"));",
 									"    });"
 								],
 								"type": "text/javascript"
@@ -820,7 +875,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/1",
+							"raw": "http://localhost:8080/admin/comments/:commentId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -829,13 +884,12 @@
 							"path": [
 								"admin",
 								"comments",
-								"1"
+								":commentId"
 							],
-							"query": [
+							"variable": [
 								{
-									"key": "",
-									"value": null,
-									"disabled": true
+									"key": "commentId",
+									"value": "{{firstCommentId}}"
 								}
 							]
 						}
@@ -869,7 +923,7 @@
 									"});",
 									"",
 									"pm.test(\"id комментария должен соответствовать запрошенному\", function () {",
-									"    pm.expect(target.id).equal(2);",
+									"    pm.expect(target.id).equal(pm.variables.get(\"secondCommentId\"));",
 									"    });"
 								],
 								"type": "text/javascript"
@@ -936,7 +990,7 @@
 									"});",
 									"",
 									"pm.test(\"id комментария должен соответствовать запрошенному\", function () {",
-									"    pm.expect(target.id).equal(4);",
+									"    pm.expect(target.id).equal(pm.variables.get(\"fourthCommentId\"));",
 									"    });"
 								],
 								"type": "text/javascript"
@@ -1003,8 +1057,8 @@
 									"});",
 									"",
 									"pm.test(\"id комментария должен соответствовать запрошенному\", function () {",
-									"    pm.expect(target.id).equal(1);",
-									"    pm.expect(secondObj.id).equal(3);",
+									"    pm.expect(target.id).equal(pm.variables.get(\"firstCommentId\"));",
+									"    pm.expect(secondObj.id).equal(pm.variables.get(\"thirdCommentId\"));",
 									"    });"
 								],
 								"type": "text/javascript"
@@ -1021,7 +1075,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/comments/replies/1",
+							"raw": "http://localhost:8080/comments/replies/:commentId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1030,13 +1084,19 @@
 							"path": [
 								"comments",
 								"replies",
-								"1"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{firstCommentId}}"
 								}
 							]
 						}
@@ -1072,10 +1132,10 @@
 									"",
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
-									"    pm.expect(target.id).equal(1);",
-									"    pm.expect(target.commentator.id).equal(1);",
+									"    pm.expect(target.id).equal(pm.variables.get(\"firstCommentId\"));",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"firstUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser1\");",
-									"    pm.expect(target.eventId).equal(1);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"firstEventId\"));",
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).not.equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"true\");",
@@ -1113,7 +1173,7 @@
 							"raw": "{\"content\":\"отредактированный комментарий\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/1?userId=1&eventId=1",
+							"raw": "http://localhost:8080/users/comments/:commentId?userId={{firstUserId}}&eventId={{firstEventId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1122,16 +1182,22 @@
 							"path": [
 								"users",
 								"comments",
-								"1"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{firstUserId}}"
 								},
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{firstEventId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{firstCommentId}}"
 								}
 							]
 						}
@@ -1177,7 +1243,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/users/comments/2?userId=1&eventId=1",
+							"raw": "http://localhost:8080/users/comments/:commentId?userId={{firstUserId}}&eventId={{firstEventId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1186,16 +1252,22 @@
 							"path": [
 								"users",
 								"comments",
-								"2"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{firstUserId}}"
 								},
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{firstEventId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{secondCommentId}}"
 								}
 							]
 						}
@@ -1229,7 +1301,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/2",
+							"raw": "http://localhost:8080/admin/comments/:commentId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1238,13 +1310,19 @@
 							"path": [
 								"admin",
 								"comments",
-								"2"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{secondCommentId}}"
 								}
 							]
 						}
@@ -1290,7 +1368,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/users/comments/1?userId=3&eventId=1",
+							"raw": "http://localhost:8080/users/comments/:commentId?userId={{thridUserId}}&eventId={{firstEventId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1299,16 +1377,22 @@
 							"path": [
 								"users",
 								"comments",
-								"1"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "3"
+									"value": "{{thridUserId}}"
 								},
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{firstEventId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{firstCommentId}}"
 								}
 							]
 						}
@@ -1354,7 +1438,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/3",
+							"raw": "http://localhost:8080/admin/comments/:commentId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1363,7 +1447,13 @@
 							"path": [
 								"admin",
 								"comments",
-								"3"
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{thirdCommentId}}"
+								}
 							]
 						}
 					},
@@ -1396,7 +1486,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/3",
+							"raw": "http://localhost:8080/admin/comments/:commentId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1405,13 +1495,19 @@
 							"path": [
 								"admin",
 								"comments",
-								"3"
+								":commentId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "{{thirdCommentId}}"
 								}
 							]
 						}
@@ -1457,7 +1553,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/user/1",
+							"raw": "http://localhost:8080/admin/comments/user/:userId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1467,7 +1563,13 @@
 								"admin",
 								"comments",
 								"user",
-								"1"
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{firstUserId}}"
+								}
 							]
 						}
 					},
@@ -1506,7 +1608,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/user/1",
+							"raw": "http://localhost:8080/admin/comments/user/:userId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1516,13 +1618,19 @@
 								"admin",
 								"comments",
 								"user",
-								"1"
+								":userId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{firstUserId}}"
 								}
 							]
 						}
@@ -1568,7 +1676,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/events/1",
+							"raw": "http://localhost:8080/admin/comments/events/:eventId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1578,7 +1686,13 @@
 								"admin",
 								"comments",
 								"events",
-								"1"
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
+								}
 							]
 						}
 					},
@@ -1617,7 +1731,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/comments/event/1",
+							"raw": "http://localhost:8080/comments/event/:eventId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1626,13 +1740,19 @@
 							"path": [
 								"comments",
 								"event",
-								"1"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{firstEventId}}"
 								}
 							]
 						}
@@ -1655,7 +1775,10 @@
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
-									"});"
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fourthUserId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1705,7 +1828,10 @@
 									"    pm.response.to.have.status(201);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
-									"});"
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fifthUserId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1763,7 +1889,9 @@
 									"pm.test(\"Событие должно содержать поле disableComments\", function () {",
 									"pm.expect(target).to.have.property('disableComments');",
 									"});",
-									""
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"thridEventId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1785,10 +1913,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"annotation\":\"тестовое событие 3\",\"category\":1,\"description\":\"событие которое удалят\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"удалите меня\"}"
+							"raw": "{\"annotation\":\"тестовое событие 3\",\"category\":{{CommentsCategoryId}},\"description\":\"событие которое удалят\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"удалите меня\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/4/events",
+							"raw": "http://localhost:8080/users/:userId/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1796,8 +1924,14 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"4",
+								":userId",
 								"events"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{fourthUserId}}"
+								}
 							]
 						}
 					},
@@ -1821,7 +1955,10 @@
 									"",
 									"pm.test(\"Событие должно содержать поле disableComments\", function () {",
 									"pm.expect(target).to.have.property('disableComments');",
-									"});"
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fourthEventId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1843,10 +1980,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"annotation\":\"тестовое событие 4\",\"category\":1,\"description\":\"а это событие не удалят, но зато удалят пользователя, который оставил ему комментарий\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"кто напишет комментарий - забаним\"}"
+							"raw": "{\"annotation\":\"тестовое событие 4\",\"category\":{{CommentsCategoryId}},\"description\":\"а это событие не удалят, но зато удалят пользователя, который оставил ему комментарий\",\"eventDate\":\"2024-03-17 23:00:00\",\"location\":{\"lat\":60.0,\"lon\":-90.0},\"paid\":\"false\",\"participantLimit\":\"1\",\"requestModeration\":\"true\",\"title\":\"кто напишет комментарий - будет забанен\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/4/events",
+							"raw": "http://localhost:8080/users/:userId/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1854,8 +1991,14 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"4",
+								":userId",
 								"events"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{fourthUserId}}"
+								}
 							]
 						}
 					},
@@ -1891,13 +2034,16 @@
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
 									"    pm.expect(target.id).equal(5);",
-									"    pm.expect(target.commentator.id).equal(4);",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"fourthUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser4\");",
-									"    pm.expect(target.eventId).equal(3);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"thridEventId\"));",
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fourthCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1931,7 +2077,7 @@
 							"raw": "{\"content\":\"тестовый комментарий пользователь 4, событие 3\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/3?userId=4",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{fourthUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1941,12 +2087,18 @@
 								"users",
 								"comments",
 								"events",
-								"3"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "4"
+									"value": "{{fourthUserId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{thridEventId}}"
 								}
 							]
 						}
@@ -1954,7 +2106,7 @@
 					"response": []
 				},
 				{
-					"name": "создание комментария событие 3 пользователь 4 Copy",
+					"name": "создание комментария событие 3 пользователь 5",
 					"event": [
 						{
 							"listen": "test",
@@ -1983,13 +2135,16 @@
 									"pm.test(\"поля тела ответа должны соответствовать переданному значению\", function () {",
 									"    pm.expect(target.content.toString()).equal(source.content.toString());",
 									"    pm.expect(target.id).equal(6);",
-									"    pm.expect(target.commentator.id).equal(5);",
+									"    pm.expect(target.commentator.id).equal(pm.variables.get(\"fifthUserId\"));",
 									"    pm.expect(target.commentator.name).equal(\"testUser5\");",
-									"    pm.expect(target.eventId).equal(4);",
+									"    pm.expect(target.eventId).equal(pm.variables.get(\"fourthEventId\"));",
 									"    pm.expect(target.replyingTo).equal(null);",
 									"    pm.expect(target.editedOn).equal(null);",
 									"    pm.expect(target.edited.toString()).equal(\"false\");",
-									"    });"
+									"    });",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"fifthCommentId\", jsonData[\"id\"]);"
 								],
 								"type": "text/javascript"
 							}
@@ -2023,7 +2178,7 @@
 							"raw": "{\"content\":\"тестовый комментарий пользователь 5, событие 4\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/comments/events/4?userId=5",
+							"raw": "http://localhost:8080/users/comments/events/:eventId?userId={{fifthUserId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2033,12 +2188,18 @@
 								"users",
 								"comments",
 								"events",
-								"4"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "5"
+									"value": "{{fifthUserId}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{fourthEventId}}"
 								}
 							]
 						}
@@ -2090,7 +2251,7 @@
 							"raw": "{\"disableComments\":\"true\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/4/events/3",
+							"raw": "http://localhost:8080/users/:userId/events/:eventId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2098,9 +2259,19 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"4",
+								":userId",
 								"events",
-								"3"
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{fourthUserId}}"
+								},
+								{
+									"key": "eventId",
+									"value": "{{thridEventId}}"
+								}
 							]
 						}
 					},
@@ -2157,7 +2328,7 @@
 							"raw": "{\"disableComments\":\"true\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/admin/events/3",
+							"raw": "http://localhost:8080/admin/events/:eventId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2166,7 +2337,13 @@
 							"path": [
 								"admin",
 								"events",
-								"3"
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{thridEventId}}"
+								}
 							]
 						}
 					},
@@ -2205,7 +2382,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/comments/event/3",
+							"raw": "http://localhost:8080/comments/event/:eventId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2214,13 +2391,19 @@
 							"path": [
 								"comments",
 								"event",
-								"3"
+								":eventId"
 							],
 							"query": [
 								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "{{thridEventId}}"
 								}
 							]
 						}
@@ -2288,7 +2471,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/users/5",
+							"raw": "http://localhost:8080/admin/users/:userId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2297,7 +2480,13 @@
 							"path": [
 								"admin",
 								"users",
-								"5"
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{fifthUserId}}"
+								}
 							]
 						}
 					},
@@ -2330,7 +2519,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/admin/comments/user/5",
+							"raw": "http://localhost:8080/admin/comments/user/:userId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2340,7 +2529,7 @@
 								"admin",
 								"comments",
 								"user",
-								"5"
+								":userId"
 							],
 							"query": [
 								{
@@ -2348,12 +2537,100 @@
 									"value": null,
 									"disabled": true
 								}
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{fifthUserId}}"
+								}
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "secondUserId",
+			"value": ""
+		},
+		{
+			"key": "thridUserId",
+			"value": ""
+		},
+		{
+			"key": "firstUserId",
+			"value": "0"
+		},
+		{
+			"key": "CommentsCategoryId",
+			"value": ""
+		},
+		{
+			"key": "firstEventId",
+			"value": ""
+		},
+		{
+			"key": "secondEventId",
+			"value": ""
+		},
+		{
+			"key": "firstCommentId",
+			"value": ""
+		},
+		{
+			"key": "secondCommentId",
+			"value": ""
+		},
+		{
+			"key": "thirdCommentId",
+			"value": ""
+		},
+		{
+			"key": "fourthCommentId",
+			"value": ""
+		},
+		{
+			"key": "fourthUserId",
+			"value": ""
+		},
+		{
+			"key": "fifthUserId",
+			"value": ""
+		},
+		{
+			"key": "thridEventId",
+			"value": ""
+		},
+		{
+			"key": "fourthEventId",
+			"value": ""
+		},
+		{
+			"key": "fifthCommentId",
+			"value": ""
 		}
 	]
 }
