@@ -19,10 +19,10 @@ public class CommentControllerAdmin {
 
     private final CommentServiceAdmin commentServiceAdmin;
 
-    @GetMapping("/{id}")
-    public CommentDto getById(@PathVariable Long id) {
-        log.info("Запрос комментария по id " + id);
-        return commentServiceAdmin.getCommentById(id);
+    @GetMapping("/{commentId}")
+    public CommentDto getById(@PathVariable Long commentId) {
+        log.info("Запрос комментария по id " + commentId);
+        return commentServiceAdmin.getCommentById(commentId);
     }
 
     @GetMapping("/user/{userId}")
@@ -34,11 +34,11 @@ public class CommentControllerAdmin {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommentById(@PathVariable Long id) {
-        log.info("Запрос удаления комментария по id - " + id + " от администратора");
-        commentServiceAdmin.deleteCommentById(id);
+    public void deleteCommentById(@PathVariable Long commentId) {
+        log.info("Запрос удаления комментария по id - " + commentId + " от администратора");
+        commentServiceAdmin.deleteCommentById(commentId);
     }
 
     @DeleteMapping("/user/{userId}")
