@@ -6,8 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.comments.dto.CommentDto;
-import ru.practicum.comments.dto.NewCommentDto;
-import ru.practicum.comments.dto.UpdateCommentRequest;
+import ru.practicum.comments.dto.CommentDtoRequest;
 import ru.practicum.comments.mapper.CommentMapper;
 import ru.practicum.comments.model.Comment;
 import ru.practicum.comments.repository.CommentRepository;
@@ -30,7 +29,7 @@ public class CommentServicePrivateImpl implements CommentServicePrivate {
     private final EwmObjectFinder finder;
 
     @Override
-    public CommentDto createComment(NewCommentDto commentDto, Long userId, Long eventId, Long replyingTo) {
+    public CommentDto createComment(CommentDtoRequest commentDto, Long userId, Long eventId, Long replyingTo) {
         if (replyingTo != null) {
             finder.checkCommentExistenceById(replyingTo);
         }
@@ -43,7 +42,7 @@ public class CommentServicePrivateImpl implements CommentServicePrivate {
     }
 
     @Override
-    public CommentDto editComment(Long commentId, UpdateCommentRequest request, Long userId, Long eventId) {
+    public CommentDto editComment(Long commentId, CommentDtoRequest request, Long userId, Long eventId) {
         Comment comment = finder.findComment(commentId);
         if (!comment.getCommentator().getId().equals(userId)) {
             throw new DataConflictException("Редактировать можно только свои комментарии");

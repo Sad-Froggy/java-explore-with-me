@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewCommentDto {
+public class CommentDtoRequest {
 
     @NotBlank(message = "содержание комментария не должно быть пустым")
     private String content;

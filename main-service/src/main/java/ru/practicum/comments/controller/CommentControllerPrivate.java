@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comments.dto.CommentDto;
-import ru.practicum.comments.dto.NewCommentDto;
-import ru.practicum.comments.dto.UpdateCommentRequest;
+import ru.practicum.comments.dto.CommentDtoRequest;
 import ru.practicum.comments.service.CommentServicePrivate;
 
 import javax.validation.Valid;
@@ -22,7 +21,7 @@ public class CommentControllerPrivate {
 
     @PostMapping("/events/{eventId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto createComment(@RequestBody @Valid NewCommentDto commentDto,
+    public CommentDto createComment(@RequestBody @Valid CommentDtoRequest commentDto,
                                     @RequestParam @PositiveOrZero Long userId,
                                     @PathVariable @PositiveOrZero Long eventId,
                                     @RequestParam(required = false) Long replyingTo) {
@@ -33,7 +32,7 @@ public class CommentControllerPrivate {
     @PatchMapping("/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto editComment(@PathVariable Long commentId,
-                                  @RequestBody @Valid UpdateCommentRequest request,
+                                  @RequestBody @Valid CommentDtoRequest request,
                                   @RequestParam Long userId,
                                   @RequestParam Long eventId) {
         log.info("Запрос обновления комментария с id - " + commentId + " от пользователя с id - " + userId +
