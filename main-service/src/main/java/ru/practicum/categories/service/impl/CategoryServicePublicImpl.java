@@ -1,6 +1,7 @@
 package ru.practicum.categories.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class CategoryServicePublicImpl implements CategoryServicePublic {
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategories(Long from, Integer size) {
         PageRequest pageRequest = PageRequest.of(0, size);
-        List<Category> foundCategories = categoryRepository
+        Page<Category> foundCategories = categoryRepository
                 .findAllByIdIsGreaterThanEqualOrderByIdAsc(from, pageRequest);
         return foundCategories.stream().map(CategoryMapper::toCategoryDto).collect(Collectors.toList());
     }
