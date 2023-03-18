@@ -9,7 +9,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findByEventId(Long eventId, Pageable pageable);
 
-    Page<Comment>findByCommentatorId(Long commentatorId, Pageable pageable);
+    Page<Comment> findByCommentatorId(Long commentatorId, Pageable pageable);
 
     Page<Comment> findByReplyingTo(Long commentId, Pageable pageable);
 
