@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank;
 public class NewUserRequest {
     @Email
     private String email;
-    @NotBlank(message = "Поле \"name\" не должно быть пустым")
+    @NotBlank(message = "Поле name не должно быть пустым")
     private String name;
 }

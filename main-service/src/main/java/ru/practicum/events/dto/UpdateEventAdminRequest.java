@@ -20,6 +20,7 @@ public class UpdateEventAdminRequest {
     private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;
+    private Boolean disableComments;
     private Long participantLimit;
     private Boolean requestModeration;
     private StateAction stateAction;

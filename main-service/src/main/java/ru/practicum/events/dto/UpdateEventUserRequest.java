@@ -26,6 +26,7 @@ public class UpdateEventUserRequest {
     private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;
+    private Boolean disableComments;
     @PositiveOrZero
     private Long participantLimit;
     private Boolean requestModeration;
