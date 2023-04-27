@@ -1,77 +1,35 @@
-# java-explore-with-me
+# Explore With Me
 
-[ссылка на пул-реквест фичи](https://github.com/Sad-Duck/java-explore-with-me/pull/4)
+Explore With Me это микросервисное приложение - афиша. В нём можно предложить любое событие от концерта до похода в музей и собрать компанию для участия в нём.
 
-# Новые эндпоинты добавленные в ветке feature_comments:
+Свободное время - это ценность. Это приложение помогает сократить время на поиск интересных событий, учитывая все возможные мероприятия и расписание друзей. 
+Теперь будет легко выбрать интересное событие, место встречи и пригласить всех желающих.
 
-## Public:
+<img src="util/readmeExample1.png" alt="Alt text" title="Optional title">
 
-##### <span style="color:CornflowerBlue ">Get
-###### /comments/event/{eventId} 
-получение постраничного списка комментариев к событию.
+Приложение строится на двух сервисах:
+- Main сервис содержит всё необходимое для работы продукта;
+- Сервис статистики хранит количество просмотров и позволяет делать различные выборки для анализа работы приложения.
 
+API основного сервиса в свою очередь делится на три части:
+- публичная доступна без регистрации любому пользователю сети;
+- закрытая доступна только авторизованным пользователям;
+- административная — для администраторов сервиса.
 
-##### <span style="color:CornflowerBlue ">Get
-###### /comments/replies/{commentId} 
-получение ветки комментария и ответов на него
+<img src="util/readmeExample2.png" alt="Alt text" title="Optional title">
 
-## Private:
+Применяемы технологии:
+- Java 11
+- Spring Boot
+- Docker
+- Hibernate
+- PostgreSQL
+- Maven
+- Lombok
+- Junit5
+- Postman
+- REST
 
-##### <span style="color:DarkSeaGreen ">Post
-###### /users/comments/events/{eventId} 
-создание комментария к событию
+#### Схема базы данных:
 
-##### <span style="color:Aqua">Patch
-###### /users/comments/{commentId} 
-редактирование комментария создателем
-
-##### <span style="color:red">Delete
-###### /users/comments/{commentId} 
-удаление комментария создателем
-
-## Admin:
-
-##### <span style="color:CornflowerBlue ">Get
-###### /admin/comments/{commentId} 
-получение одного комментария по id
-
-##### <span style="color:CornflowerBlue ">Get
-###### /admin/comments/user/{userId} 
-получение постраничног списка всех комментариев созданных пользователем
-
-##### <span style="color:red">Delete
-###### /admin/comments/{commentId} 
-удаление одного комментария по id администратором
-
-##### <span style="color:red">Delete
-###### /admin/comments/user/{userId} 
-удаление всех комментариев пользователя
-
-##### <span style="color:red">Delete
-###### /admin/comments/events/{eventId} 
-удаление всех комментариев события
-
-* при удалении комментария вся ветка его ответов также удаляется
-
-# Старые эндпоинты, изменённые в этой ветке:
-
-## Private:
-
-##### <span style="color:DarkSeaGreen ">Post
-###### users/{userId}/events
-##### <span style="color:Aqua">Patch
-###### /users/{userId}/events/{eventId}
-При создании события можно установить boolean переменную "disableComments"
-Если disableComments = true, то комментировать событие нельзя. 
-Если у события уже есть комментарии, отключить их нельзя
-
-## Admin:
-
-##### <span style="color:Aqua">Patch
-###### /admin/events/{eventId}
-Если у события уже есть комментарии, администратор все равно может их отключить - тогда все комментарии события 
-будут удалены
-
-##### <span style="color:red">Delete
-###### /admin/users/{userId}
-При удалении пользователя теперь все его комментарии будут удалены
+<img src="util/scheme.png" alt="Alt text" title="Optional title">
